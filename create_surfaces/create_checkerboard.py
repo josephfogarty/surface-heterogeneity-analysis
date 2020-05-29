@@ -27,7 +27,7 @@ root = cnst.root
 # bounds may need to be changed depending on label
 print(f"\n  Make sure bounds apply to {label}")
 
-# save paths for text and image files
+# save paths for text and image files for checkerboards
 sp = os.path.join(root,"surfaces","checkerboard","arrays")
 sp_img = os.path.join(root,"surfaces","checkerboard","img")
 
@@ -44,6 +44,8 @@ checker8 = fn.conv_np_array_reso(np.tile(base_pattern,(4,4)),Nx)
 checker16 = fn.conv_np_array_reso(np.tile(base_pattern,(8,8)),Nx)
 
 #### write arrays and images to a file ####
+
+# save text files
 np.savetxt(os.path.join(sp,f'checker2_{label}_reso{Nx}.txt'), checker2, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f'checker4_{label}_reso{Nx}.txt'), checker4, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f'checker8_{label}_reso{Nx}.txt'), checker8, delimiter=' ',fmt='%.2f')

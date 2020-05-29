@@ -7,27 +7,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+# import constants and funcs
+from constants import cnst
+import funcs as fn
+
 # colormap properties for ice, water, and pond
 from matplotlib.colors import ListedColormap
 from matplotlib.colors import BoundaryNorm
 cmap = ListedColormap(['xkcd:off white', 'xkcd:midnight blue'])
-bounds = [-0.4,0.5,1.5,2.5,3.5]
+bounds = [0,272.15,300]
 norm = BoundaryNorm(bounds,cmap.N)
 
-#%% parameters
+# define constants - these are changed in class cnst in constants.py
+Nx = cnst.Nx
+Ny = cnst.Ny
+ice = cnst.ice
+water = cnst.water
+label = cnst.label
+root = cnst.root
 
-# representative values
-ice = 1
-sea = 2
+# bounds may need to be changed depending on label
+print(f"\n  Make sure bounds apply to {label}")
 
-#shape
-Nx = 64
-Ny = Nx
+# save paths for text and image files for strips
+sp = os.path.join(root,"surfaces","strips","arrays")
+sp_img = os.path.join(root,"surfaces","strips","img")
 
-#%% create the arrays
+#### create the strip arrays, par (ideal) and perp (trans) ####
 
 # base array of all ice
-arr_base = np.full((Nx,Ny),sea)
+arr_base = np.full((Nx,Ny),water)
 
 # for two strips
 strip_02 = np.copy(arr_base)
@@ -72,26 +81,22 @@ for i, v in zip(ind,values):
     strip_32[:,i:] = v
 strip_32_trans = strip_32.T
 
-#%%
+#### write arrays and images to a file ####
 
-# save path for diagonals
-sp_strip = os.path.join("array_text_files","ideal_patterns","strip_test")
+# save text files
+np.savetxt(os.path.join(sp,f"strip_02_perp_{label}_reso{Nx}.txt"), strip_02, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_04_perp_{label}_reso{Nx}.txt"), strip_04, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_08_perp_{label}_reso{Nx}.txt"), strip_08, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_16_perp_{label}_reso{Nx}.txt"), strip_16, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_32_perp_{label}_reso{Nx}.txt"), strip_32, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_02_par_{label}_reso{Nx}.txt"), strip_02_trans, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_04_par_{label}_reso{Nx}.txt"), strip_04_trans, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_08_par_{label}_reso{Nx}.txt"), strip_08_trans, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_16_par_{label}_reso{Nx}.txt"), strip_16_trans, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"strip_32_par_{label}_reso{Nx}.txt"), strip_32_trans, delimiter=' ',fmt='%.2f')
 
-# save all arrays
-np.savetxt(os.path.join(sp_strip,"strip_02.txt"), strip_02)
-np.savetxt(os.path.join(sp_strip,"strip_04.txt"), strip_04)
-np.savetxt(os.path.join(sp_strip,"strip_08.txt"), strip_08)
-np.savetxt(os.path.join(sp_strip,"strip_16.txt"), strip_16)
-np.savetxt(os.path.join(sp_strip,"strip_32.txt"), strip_32)
-np.savetxt(os.path.join(sp_strip,"strip_02_trans.txt"), strip_02_trans)
-np.savetxt(os.path.join(sp_strip,"strip_04_trans.txt"), strip_04_trans)
-np.savetxt(os.path.join(sp_strip,"strip_08_trans.txt"), strip_08_trans)
-np.savetxt(os.path.join(sp_strip,"strip_16_trans.txt"), strip_16_trans)
-np.savetxt(os.path.join(sp_strip,"strip_32_trans.txt"), strip_32_trans)
 
-#%% graphic of new patterns 
-
-# view all four figures
+# save images of strip files
 fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(figsize=(13, 5), ncols=5)
 ax1.set_title("2 strips")
 im2 = ax1.imshow(strip_02,cmap=cmap)
@@ -108,7 +113,8 @@ im16 = ax4.imshow(strip_16,cmap=cmap)
 ax5.set_title("32 strips")
 im32 = ax5.imshow(strip_32,cmap=cmap)
 #fig.colorbar(im32, ax=ax5)
-plt.show()
+plt.savefig(os.path.join(sp_img,f"strip_perp_{label}_reso{Nx}_comparison"))
+plt.close()
 
 # view all four trans figures
 fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(figsize=(13, 5), ncols=5)
@@ -127,5 +133,5 @@ im16 = ax4.imshow(strip_16_trans,cmap=cmap)
 ax5.set_title("32 strips")
 im32 = ax5.imshow(strip_32_trans,cmap=cmap)
 #fig.colorbar(im32, ax=ax5)
-plt.show()
-
+plt.savefig(os.path.join(sp_img,f"strip_par_{label}_reso{Nx}_comparison"))
+plt.close()
