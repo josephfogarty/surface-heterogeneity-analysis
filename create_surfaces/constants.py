@@ -7,8 +7,12 @@ class cnst(object):
     ##### Constants #####
 
     # surface grid values
+    label = 'theta'
     ice = 270.15 # temp of ice, K
     water = 274.15 # temp of water, K
+    #ice = 0.0002 # roughness of ice, m
+    #water = 0.002 # roughness of water, m
+    #label = 'rough'
 
     # spatial parameters
     Nx = 96 # number of grid cells in x direction
