@@ -40,7 +40,7 @@ for filename in os.listdir(lp):
         print(f"importing {filename}")
         
         # change resolution of array
-        arr = fn.conv_np_array_reso(arr, np.shape(arr)[0]*10)
+        #arr = fn.conv_np_array_reso(arr, np.shape(arr)[0])
         
         # add noise to array
         arr = arr + np.random.normal(0, 1, np.shape(arr))
@@ -57,8 +57,8 @@ plt.legend()
 plt.show()
 
 
-plt.imshow(arr)
-plt.show()
+#plt.imshow(arr)
+#plt.show()
 ##### calculation semivariogram #####
 
 # using my method
