@@ -1,2 +1,3 @@
-# surface-heterogeneity-analysis
- codes for quantifying surface heterogeneity
+## Surface Heterogeneity Analysis
+
+This repo contains codes for creating, modifying, and quantifying surface heterogeneity.
