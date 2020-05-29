@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# add to python path
+# add to python path to import constants and funcs
 import sys
 sys.path.insert(1, os.path.join('D:',os.sep,'surface-heterogeneity-analysis'))
 from constants import cnst
