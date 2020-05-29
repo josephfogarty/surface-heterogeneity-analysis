@@ -5,9 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# import constants and funcs
+# import constants and funcs by going up one, importing, then going back down
+os.chdir(os.path.join("D:",os.sep,"surface-heterogeneity-analysis"))
 from constants import cnst
 import funcs as fn
+os.chdir(os.path.join("create_surfaces"))
 
 # Colormap properties for ice, water, and pond
 from matplotlib.colors import ListedColormap

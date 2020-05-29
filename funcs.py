@@ -3,30 +3,33 @@
 # needed libraries
 import numpy as np
 
-#%% the functions
+##### the functions #####
 
-def conv_np_array_reso(loaded_mat, new_reso):
+def conv_np_array_reso(arr, new_reso):
     
     """
     This function takes in a (square) array and changes the resolution of it
     by upscaling by a factor of the LCM of the old and new array shape,
     and then downscaling using the max of squares inside a cell
+    
+    loaded_mat is the array to be converted
+    new_reso is the new resolution (remember this is square)
     """
     
     # the new resolution is a square array - this must all be square
     rows = new_reso
     cols = new_reso
     
-    print(f"\n  Converting Resolution from {np.shape(loaded_mat)[0]} to {new_reso}")
+    print(f"\n  Converting Resolution from {np.shape(arr)[0]} to {new_reso}")
     
     # see if array needs to be upscaled by calculating LCM factor
-    LCM_factor = int(np.lcm(new_reso,np.shape(loaded_mat)[0])/np.shape(loaded_mat)[0])
+    LCM_factor = int(np.lcm(new_reso,np.shape(arr)[0])/np.shape(arr)[0])
     
     # if the array needs to be upscaled
     if LCM_factor != 1:
         
         #upscale the array
-        loaded_mat = np.kron(loaded_mat, np.ones((LCM_factor,LCM_factor)))
+        arr = np.kron(arr, np.ones((LCM_factor,LCM_factor)))
         print("    Upscaling needed and complete!")
     
     # if the factor equals one, no upscaling is needed
@@ -42,11 +45,11 @@ def conv_np_array_reso(loaded_mat, new_reso):
         for j in range(0,cols):
             
             # get the indices
-            row_sp = int(loaded_mat.shape[0]/rows)
-            col_sp = int(loaded_mat.shape[1]/cols)
+            row_sp = int(arr.shape[0]/rows)
+            col_sp = int(arr.shape[1]/cols)
             
             # each sub area
-            zz = loaded_mat[i*row_sp : i*row_sp + row_sp, j*col_sp : j*col_sp + col_sp]
+            zz = arr[i*row_sp : i*row_sp + row_sp, j*col_sp : j*col_sp + col_sp]
             
             # assign the average to the returned matrix
             shrunk[i,j] = np.mean(zz)
@@ -89,3 +92,51 @@ def shuffle(arr, n_sections):
 
     return new_arr
 
+def semivariogram(arr):
+
+    """
+    This is a brute-force semivariogram code which (right now only in the 
+    x direction) computes the structure function across rows
+    
+    arr is the 2D array to be analyzed
+    """
+    
+    # range of rx
+    rx_vals = np.arange(np.shape(arr)[1])
+    
+    semivar = []
+    
+    # spatial translation vector
+    for rx in rx_vals:
+        
+        # list for all rows - to be averaged
+        avg_of_rows = []
+        
+        # for each row in the array
+        for row in range(np.shape(arr)[0]):
+            
+            # create list of values
+            avg_of_cols = []
+            
+            # for each column
+            for col in range(np.shape(arr)[0]-rx):
+                
+                # calculate squared difference
+                sq_diff = (arr[row,col] - arr[row,col+rx])**2.0
+                
+                # add to list
+                avg_of_cols.append(sq_diff)
+            
+            # calculate mean of row
+            row_avg = np.mean(avg_of_cols)
+            
+            # add to list
+            avg_of_rows.append(row_avg)
+        
+        # get the structure function for this translation vector
+        avg_of_rx = np.mean(avg_of_rows)
+        
+        # add to list
+        semivar.append(avg_of_rx)
+    
+    return rx_vals, np.array(semivar)
