@@ -2,6 +2,7 @@
 
 # needed libraries
 import numpy as np
+from scipy import stats
 
 ##### the functions #####
 
@@ -30,7 +31,7 @@ def conv_np_array_reso(arr, new_reso):
         
         #upscale the array
         arr = np.kron(arr, np.ones((LCM_factor,LCM_factor)))
-        print("    Upscaling needed and complete!")
+        print(f"    Upscaling needed to {LCM_factor} and complete!")
     
     # if the factor equals one, no upscaling is needed
     else:
@@ -50,9 +51,18 @@ def conv_np_array_reso(arr, new_reso):
             
             # each sub area
             zz = arr[i*row_sp : i*row_sp + row_sp, j*col_sp : j*col_sp + col_sp]
+            #print(zz)
+            
+            # convert to float
+            #zz = zz.astype(float)
+            
+            # calculate the mode
+            #mode_of_zz = stats.mode(zz,axis=None)[0][0]
+            #print(f"  The mode is {mode_of_zz}")
             
             # assign the average to the returned matrix
-            shrunk[i,j] = np.mean(zz)
+            shrunk[i,j] = stats.mode(zz,axis=None)[0][0]
+            #print(f"  Shrunk[i,j] = {shrunk[i,j]}, {type(shrunk[i,j])}")
     
     # return
     print("    Finished!\n")       
