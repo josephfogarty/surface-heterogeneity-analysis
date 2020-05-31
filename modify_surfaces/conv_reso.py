@@ -43,12 +43,12 @@ for filename in os.listdir(lp):
         conv_arr = fn.conv_np_array_reso(loaded_arr, final_conv_reso)
         
         # check the unique values
-        print(f"\n  The unique value of the converted array is {np.unique(conv_arr)}")
-        print(f"  The size of the array {np.shape(conv_arr)}")
+        print(f"\n    The unique value of the converted array is {np.unique(conv_arr)}")
+        print(f"    The size of the array {np.shape(conv_arr)}")
         
         # save to the completed folder with the same name
         np.savetxt(os.path.join(sp,filename), conv_arr, delimiter=' ',fmt='%.2f')
-        print(f"  File {filename} has been imported, converted, and saved")
+        print(f"    File {filename} has been imported, converted, and saved")
         
         # testing to see if it was done correctly
         fig, ax = plt.subplots(ncols=2,figsize=(10,4))
