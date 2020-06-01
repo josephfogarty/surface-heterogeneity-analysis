@@ -3,6 +3,7 @@
 # needed libraries
 import numpy as np
 from scipy import stats
+from scipy.integrate import simps
 
 ##### the functions #####
 
@@ -108,6 +109,9 @@ def semivariogram(arr):
     This is a brute-force semivariogram code which (right now only in the 
     x direction) computes the structure function across rows
     
+    This function also calculates the integral length scale using the method
+    outlined in Bou-Zeid et. al (2007), JAS
+    
     arr is the 2D array to be analyzed
     """
     
@@ -148,5 +152,40 @@ def semivariogram(arr):
         
         # add to list
         semivar.append(avg_of_rx)
-    
-    return rx_vals, np.array(semivar)
+        
+        # convert to array
+        semivar = np.array(semivar)
+        
+        # calculate integrand
+        integrand = 1.0 - (semivar/np.max(semivar))
+        
+        # calculate change in rx
+        # should be 1 for using the arange function
+        # but this might change later
+        drx = 1
+        
+        # estimate integral using simpsons rule to get integral length scale
+        l_p = simps(integrand, dx=drx)
+   
+    return rx_vals, semivar, l_p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

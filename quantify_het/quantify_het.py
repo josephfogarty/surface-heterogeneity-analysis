@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+# reset matplotlib to defalt settings
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 
@@ -20,15 +21,19 @@ os.chdir(os.path.join("create_surfaces"))
 label = cnst.label
 root = cnst.root
 
+# clear all plots
+plt.close('all')
 
 ##### create semivariograms to compare #####
 
-
 # load the array text file from the surface folder
-lp = os.path.join(root,"surfaces","checkerboard","arrays")
+# current options: checkerboard, strips
+pattern = 'checkerboard'
+noise = False
+lp = os.path.join(root,"surfaces",pattern,"arrays")
 
 # create figure
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(10,6))
 
 # iterate over files
 for filename in os.listdir(lp):
@@ -39,22 +44,39 @@ for filename in os.listdir(lp):
         arr = np.loadtxt(os.path.join(lp,filename))
         print(f"importing {filename}")
         
-        # change resolution of array
+        # change resolution of array - if needed
         #arr = fn.conv_np_array_reso(arr, np.shape(arr)[0])
         
-        # add noise to array
-        arr = arr + np.random.normal(0, 1, np.shape(arr))
+        # add noise to array, if flagged
+        if noise:
+            arr = arr + np.random.normal(0, 1, np.shape(arr))
         
         # calculate rx and semivariogram
         rx, semivar = fn.semivariogram(arr)
         
         # create figure
-        ax.plot(rx,semivar/np.max(semivar),label=r"$D_{\theta\theta}$"+f" - {filename[:8]}")
+        ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
 
+# finish plotting and show
 
+# formatting and labels
+ax.set_xlabel(r'$r_x$',fontsize=20)
+ax.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
+ax.tick_params(labelsize=12)
+plt.legend(fontsize=16)
 
-plt.legend()
-plt.show()
+# titlestring
+if noise:
+    nstring = ["(Noise)","_noise"]
+else:
+    nstring = ["",""]
+ax.set_title(f"Structure Functions - {pattern}"+nstring[0],fontsize=16)
+
+# set filename and save
+fname = f'{pattern}' + nstring[1] + '.png'
+plt.savefig(os.path.join(root,'results','structure_functions',fname))
+
+# calculate
 
 
 #plt.imshow(arr)
