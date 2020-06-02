@@ -28,11 +28,12 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'strips_par'
-noise = False
+pattern = 'checkerboard'
+noise = True
 reso = 96
-lp = os.path.join(root,"surfaces",'strips','arrays','perp')
-string_cutoff = -22
+lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
+#lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
+#checkerboard=-17, strips=-22
 
 ################# all options should be able to be set above #################
 
@@ -45,6 +46,7 @@ else:
 # set filename for saving
 fname = f'{pattern}' + nstring[1] + '.png'
 titlestring = f"Structure Functions - {pattern}"+nstring[0]
+print(f"\n  Title to be used: {titlestring}\n  Filename to be used: {fname}")
 
 # create figure
 fig, ax = plt.subplots(figsize=(10,6))
@@ -70,10 +72,12 @@ for filename in sorted(os.listdir(lp)):
         # add noise to array, if flagged
         if noise:
             arr = arr + np.random.normal(0, 1, np.shape(arr))
+            #plt.matshow(arr)
+            #plt.colorbar()
         
         # calculate rx and semivariogram, append int_scale
         rx, semivar, int_scale = fn.semivariogram(arr)
-        int_scale_dict[filename[:string_cutoff]] = int_scale
+        int_scale_dict[filename[:s_cutoff]] = int_scale
         
         # create figure
         ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
