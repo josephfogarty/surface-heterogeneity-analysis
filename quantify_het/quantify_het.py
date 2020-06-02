@@ -29,7 +29,7 @@ plt.close('all')
 # load the array text file from the surface folder
 # current options: checkerboard, strips
 pattern = 'checkerboard'
-noise = False
+noise = True
 reso = 96
 lp = os.path.join(root,"surfaces",pattern,"arrays")
 
@@ -46,11 +46,13 @@ for filename in os.listdir(lp):
         
         # import array
         arr = np.loadtxt(os.path.join(lp,filename))
-        print(f"importing {filename}")
+        print(f"\n  Importing {filename}")
         
         # change resolution of array - if needed
-        if reso = np.shape(arr)[0]:
-            arr = fn.conv_np_array_reso(arr, reso)
+        if int(reso) != np.shape(arr)[0]:
+            print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
+            arr = fn.conv_np_array_reso(arr, int(reso))
+        
         
         # add noise to array, if flagged
         if noise:
@@ -82,7 +84,9 @@ ax.set_title(f"Structure Functions - {pattern}"+nstring[0],fontsize=16)
 fname = f'{pattern}' + nstring[1] + '.png'
 plt.savefig(os.path.join(root,'results','structure_functions',fname))
 
-# calculate
+# bar graph of int length scales
+fig, ax = plt.subplots()
+plt.bar(int_scale_dict.keys(), int_scale_dict.values())
 
 
 #plt.imshow(arr)
@@ -101,15 +105,6 @@ plt.savefig(os.path.join(root,'results','structure_functions',fname))
 #V = Variogram(coords,values)
 #V.plot()
 #V.distance_difference_plot()
-
-
-
-
-
-
-
-
-
 
 
 
