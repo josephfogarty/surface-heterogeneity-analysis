@@ -29,9 +29,20 @@ plt.close('all')
 # load the array text file from the surface folder
 # current options: checkerboard, strips
 pattern = 'checkerboard'
-noise = True
+noise = False
 reso = 96
 lp = os.path.join(root,"surfaces",pattern,"arrays")
+
+# set strings used to save variables from parameters set above
+# titlestring
+if noise:
+    nstring = [" (Noise)","_noise"]
+else:
+    nstring = ["",""]
+# set filename for saving
+fname = f'{pattern}' + nstring[1] + '.png'
+titlestring = f"Structure Functions - {pattern}"+nstring[0]
+
 
 # create figure
 fig, ax = plt.subplots(figsize=(10,6))
@@ -40,7 +51,7 @@ fig, ax = plt.subplots(figsize=(10,6))
 int_scale_dict = {}
 
 # iterate over files
-for filename in os.listdir(lp):
+for filename in sorted(os.listdir(lp)):
     
     if filename.endswith(".txt"):
         
@@ -72,16 +83,7 @@ ax.set_xlabel(r'$r_x$',fontsize=20)
 ax.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
 ax.tick_params(labelsize=16)
 plt.legend(fontsize=16)
-
-# titlestring
-if noise:
-    nstring = [" (Noise)","_noise"]
-else:
-    nstring = ["",""]
-ax.set_title(f"Structure Functions - {pattern}"+nstring[0],fontsize=16)
-
-# set filename and save
-fname = f'{pattern}' + nstring[1] + '.png'
+ax.set_title(titlestring,fontsize=16)
 plt.savefig(os.path.join(root,'results','structure_functions',fname))
 
 # bar graph of int length scales
@@ -91,6 +93,7 @@ ax.bar(int_scale_dict.keys(), int_scale_dict.values(),width=width)
 ax.set_title(f'Integral Het. Scale - {pattern}'+nstring[0],fontsize=20)
 ax.set_ylabel(r'$L_p$',fontsize=20)
 ax.tick_params(labelsize=16)
+plt.savefig(os.path.join(root,'results','int_het_scale_comparison',fname))
 plt.show()
 
 
