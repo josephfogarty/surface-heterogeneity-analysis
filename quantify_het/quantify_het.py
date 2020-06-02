@@ -28,10 +28,13 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'checkerboard'
+pattern = 'strips_par'
 noise = False
 reso = 96
-lp = os.path.join(root,"surfaces",pattern,"arrays")
+lp = os.path.join(root,"surfaces",'strips','arrays','perp')
+string_cutoff = -22
+
+################# all options should be able to be set above #################
 
 # set strings used to save variables from parameters set above
 # titlestring
@@ -43,11 +46,10 @@ else:
 fname = f'{pattern}' + nstring[1] + '.png'
 titlestring = f"Structure Functions - {pattern}"+nstring[0]
 
-
 # create figure
 fig, ax = plt.subplots(figsize=(10,6))
 
-# empty list for integral scale
+# empty list for integral scale bar graph
 int_scale_dict = {}
 
 # iterate over files
@@ -71,7 +73,7 @@ for filename in sorted(os.listdir(lp)):
         
         # calculate rx and semivariogram, append int_scale
         rx, semivar, int_scale = fn.semivariogram(arr)
-        int_scale_dict[filename[:-17]] = int_scale
+        int_scale_dict[filename[:string_cutoff]] = int_scale
         
         # create figure
         ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
