@@ -168,6 +168,8 @@ def semivariogram(arr):
     
     # estimate integral using simpsons rule to get integral length scale
     l_p = simps(integrand, dx=drx)
+    #l_p = np.sum(integrand)
+    print(l_p)
    
     return rx_vals, semivar, l_p
 
