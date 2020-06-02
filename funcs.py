@@ -118,6 +118,7 @@ def semivariogram(arr):
     # range of rx
     rx_vals = np.arange(np.shape(arr)[1])
     
+    # empty list for semivar
     semivar = []
     
     # spatial translation vector
@@ -150,22 +151,23 @@ def semivariogram(arr):
         # get the structure function for this translation vector
         avg_of_rx = np.mean(avg_of_rows)
         
-        # add to list
+        # add to list for this value of rx
         semivar.append(avg_of_rx)
-        
-        # convert to array
-        semivar = np.array(semivar)
-        
-        # calculate integrand
-        integrand = 1.0 - (semivar/np.max(semivar))
-        
-        # calculate change in rx
-        # should be 1 for using the arange function
-        # but this might change later
-        drx = 1
-        
-        # estimate integral using simpsons rule to get integral length scale
-        l_p = simps(integrand, dx=drx)
+    
+    # now we have a list of rx values and structure function values
+    # rx_val and semivar - convert semivar to array
+    semivar = np.array(semivar)
+    
+    # calculate integrand for integral length scale
+    integrand = 1.0 - (semivar/np.max(semivar))
+    
+    # calculate change in rx
+    # should be 1 for using the arange function
+    # but this might change later
+    drx = 1.0
+    
+    # estimate integral using simpsons rule to get integral length scale
+    l_p = simps(integrand, dx=drx)
    
     return rx_vals, semivar, l_p
 

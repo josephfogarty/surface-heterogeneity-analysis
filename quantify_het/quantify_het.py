@@ -30,10 +30,14 @@ plt.close('all')
 # current options: checkerboard, strips
 pattern = 'checkerboard'
 noise = False
+reso = 96
 lp = os.path.join(root,"surfaces",pattern,"arrays")
 
 # create figure
 fig, ax = plt.subplots(figsize=(10,6))
+
+# empty list for integral scale
+int_scale_dict = {}
 
 # iterate over files
 for filename in os.listdir(lp):
@@ -45,14 +49,16 @@ for filename in os.listdir(lp):
         print(f"importing {filename}")
         
         # change resolution of array - if needed
-        #arr = fn.conv_np_array_reso(arr, np.shape(arr)[0])
+        if reso = np.shape(arr)[0]:
+            arr = fn.conv_np_array_reso(arr, reso)
         
         # add noise to array, if flagged
         if noise:
             arr = arr + np.random.normal(0, 1, np.shape(arr))
         
-        # calculate rx and semivariogram
-        rx, semivar = fn.semivariogram(arr)
+        # calculate rx and semivariogram, append int_scale
+        rx, semivar, int_scale = fn.semivariogram(arr)
+        int_scale_dict[filename] = int_scale
         
         # create figure
         ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
@@ -107,8 +113,12 @@ plt.savefig(os.path.join(root,'results','structure_functions',fname))
 
 
 
-
-
-
+#
+#
+#a_dictionary = {"a": 1, "b": 2, "c": 3}
+#keys = a_dictionary.keys()
+#values = a_dictionary.values()
+#
+#plt.bar(keys, values)
 
 
