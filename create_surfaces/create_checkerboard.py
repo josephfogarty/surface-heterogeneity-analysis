@@ -48,9 +48,9 @@ checker16 = fn.conv_np_array_reso(np.tile(base_pattern,(8,8)),Nx)
 #### write arrays and images to a file ####
 
 # save text files
-np.savetxt(os.path.join(sp,f'checker2_{label}_reso{Nx}.txt'), checker2, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f'checker4_{label}_reso{Nx}.txt'), checker4, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f'checker8_{label}_reso{Nx}.txt'), checker8, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f'checker02_{label}_reso{Nx}.txt'), checker2, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f'checker04_{label}_reso{Nx}.txt'), checker4, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f'checker08_{label}_reso{Nx}.txt'), checker8, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f'checker16_{label}_reso{Nx}.txt'), checker16, delimiter=' ',fmt='%.2f')
 
 # save images of checkerboards

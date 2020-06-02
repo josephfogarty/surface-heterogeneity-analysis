@@ -60,7 +60,7 @@ for filename in os.listdir(lp):
         
         # calculate rx and semivariogram, append int_scale
         rx, semivar, int_scale = fn.semivariogram(arr)
-        int_scale_dict[filename] = int_scale
+        int_scale_dict[filename[:-17]] = int_scale
         
         # create figure
         ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
@@ -70,12 +70,12 @@ for filename in os.listdir(lp):
 # formatting and labels
 ax.set_xlabel(r'$r_x$',fontsize=20)
 ax.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
-ax.tick_params(labelsize=12)
+ax.tick_params(labelsize=16)
 plt.legend(fontsize=16)
 
 # titlestring
 if noise:
-    nstring = ["(Noise)","_noise"]
+    nstring = [" (Noise)","_noise"]
 else:
     nstring = ["",""]
 ax.set_title(f"Structure Functions - {pattern}"+nstring[0],fontsize=16)
@@ -85,19 +85,17 @@ fname = f'{pattern}' + nstring[1] + '.png'
 plt.savefig(os.path.join(root,'results','structure_functions',fname))
 
 # bar graph of int length scales
-fig, ax = plt.subplots()
-plt.bar(int_scale_dict.keys(), int_scale_dict.values())
+fig, ax = plt.subplots(figsize=(9,6))
+width=0.35
+ax.bar(int_scale_dict.keys(), int_scale_dict.values(),width=width)
+ax.set_title(f'Integral Het. Scale - {pattern}'+nstring[0],fontsize=20)
+ax.set_ylabel(r'$L_p$',fontsize=20)
+ax.tick_params(labelsize=16)
+plt.show()
 
 
-#plt.imshow(arr)
-#plt.show()
-##### calculation semivariogram #####
+##### using scikit-gstat #####
 
-# using my method
-
-
-
-## using scikit-gstat
 #from skgstat import Variogram
 ## random coordinates
 #coords = np.random.randint(0, np.shape(arr)[0], (150,2))
@@ -106,14 +104,5 @@ plt.bar(int_scale_dict.keys(), int_scale_dict.values())
 #V.plot()
 #V.distance_difference_plot()
 
-
-
-#
-#
-#a_dictionary = {"a": 1, "b": 2, "c": 3}
-#keys = a_dictionary.keys()
-#values = a_dictionary.values()
-#
-#plt.bar(keys, values)
 
 
