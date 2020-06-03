@@ -71,7 +71,9 @@ for filename in sorted(os.listdir(lp)):
         
         # add noise to array, if flagged
         if noise:
-            arr = arr + np.random.normal(0, 1, np.shape(arr))
+            mean = 0
+            stddev = 1
+            arr = arr + np.random.normal(mean, stddev, np.shape(arr))
             #plt.matshow(arr)
             #plt.colorbar()
         
