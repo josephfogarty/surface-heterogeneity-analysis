@@ -47,7 +47,7 @@ for filename in os.listdir(lp):
         print(f"    The size of the array {np.shape(conv_arr)}")
         
         # save to the completed folder with the same name
-        np.savetxt(os.path.join(sp,filename), conv_arr, delimiter=' ',fmt='%.2f')
+        np.savetxt(os.path.join(sp,filename), conv_arr, delimiter=' ',fmt='%.5e')
         print(f"    File {filename} has been imported, converted, and saved")
         
         # testing to see if it was done correctly
@@ -57,8 +57,7 @@ for filename in os.listdir(lp):
         im1 = ax[1].imshow(conv_arr)
         fig.colorbar(im1, ax=ax[1])
         plt.show()
-
-#### testing to see if it was done correctly
+        
 #plt.close('all')
 
 
