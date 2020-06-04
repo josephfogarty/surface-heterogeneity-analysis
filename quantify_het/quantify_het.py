@@ -28,11 +28,11 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'checkerboard'
-noise = False
+pattern = 'strip'
+noise = True
 reso = 96
-lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
-#lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
+#lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
+lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
 #checkerboard=-17, strips=-22
 
 ################# all options should be able to be set above #################

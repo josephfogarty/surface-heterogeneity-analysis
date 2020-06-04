@@ -158,42 +158,55 @@ def semivariogram(arr):
     # now we have a list of rx values and structure function values
     # rx_val and semivar - convert semivar to array
     semivar = np.array(semivar)
+    
+    # check for all zeros in semivar
+    all_zeros = not np.any(semivar)
 
     #### calculate integrand for integral length scale ####
     
-    # but only for semivar once it reaches it's approx maximum value
-    # first calculate cutoff by making sure it is a local max and it is near 1
+    # in the (usual) case where are not zeros in the semivariogram
+    if all_zeros == False:
+        
+        # calculate integral length scale via Bou-Zeid (2007)
+        # but only for semivar once it reaches it's approx maximum value
+        # first calculate cutoff by making sure it is a local max and it is near 1
+        # for now we are using a very low cutoff - this can change
+        
+        # normalize semivar to compare local maxima to 1
+        semivarn = semivar/np.max(semivar)
+        print("    Semivariogram obtained and normalized")
+        
+        # cutoff
+        n = 0.5
+        print(f"    Using method: first maxima that is {n} from maximum")
+        # normalized list of local maxima
+        lmax = argrelextrema(semivarn, np.greater_equal)[0]
+        
+        # compare the absolute difference between 1 and the first maxima
+        for i in range(len(lmax)):
+            #print(i,lmax[i])
+            if abs(1.0-semivarn[lmax[i]]) <= n:
+                cutoff_location = np.where(semivarn==semivarn[lmax[i]])[0][0]   
+                print(f"    Max value found at rx={lmax[i]}")
+                break
+        
+        # now cut the array and calculate integrand
+        integrand = 1.0 - (semivar[:cutoff_location+1]/np.max(semivar))
+        
+        # calculate change in rx
+        # should be 1 for using the arange function
+        # but this might change later
+        drx = 1.0
+        
+        # estimate integral using simpsons rule to get integral length scale
+        l_p = simps(integrand, dx=drx)
+        #l_p = np.sum(integrand)
+        #print(l_p)
     
-    # normalize semivar to compare local maxima to 1
-    semivarn = semivar/np.max(semivar)
-    print("    Semivariogram obtained and normalized")
-    
-    # cutoff
-    n = 0.5
-    print(f"    Using method: first maxima that is {n} from maximum")
-    # normalized list of local maxima
-    lmax = argrelextrema(semivarn, np.greater_equal)[0]
-    
-    # compare the absolute difference between 1 and the first maxima
-    for i in range(len(lmax)):
-        print(i,lmax[i])
-        if abs(1.0-semivarn[lmax[i]]) <= n:
-            cutoff_location = np.where(semivarn==semivarn[lmax[i]])[0][0]   
-            print(f"    Max value found at rx={lmax[i]}")
-            break
-    
-    # now cut the array and calculate integrand
-    integrand = 1.0 - (semivar[:cutoff_location+1]/np.max(semivar))
-    
-    # calculate change in rx
-    # should be 1 for using the arange function
-    # but this might change later
-    drx = 1.0
-    
-    # estimate integral using simpsons rule to get integral length scale
-    l_p = simps(integrand, dx=drx)
-    #l_p = np.sum(integrand)
-    #print(l_p)
+    # but if there are zeros,
+    else:
+        l_p = len(semivar)
+        print("    All homogeneous in this direction, semivar is empty")
    
     return rx_vals, semivar, l_p
 
