@@ -29,7 +29,7 @@ plt.close('all')
 # load the array text file from the surface folder
 # current options: checkerboard, strips
 pattern = 'checkerboard'
-noise = True
+noise = False
 reso = 96
 lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
 #lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
@@ -40,19 +40,22 @@ lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
 # set strings used to save variables from parameters set above
 # titlestring
 if noise:
-    nstring = [" (Noise)","_noise"]
+    nstring = [" noise","_noise"]
 else:
     nstring = ["",""]
 # set filename for saving
-fname = f'{pattern}' + nstring[1] + '.png'
-titlestring = f"Structure Functions - {pattern}"+nstring[0]
-print(f"\n  Title to be used: {titlestring}\n  Filename to be used: {fname}")
+fname = f'{pattern}' + nstring[1]
+struc_title = f"Structure Functions - {pattern}"+nstring[0]
+int_scale_title = f'Integral Het. Scale - {pattern}'+nstring[0]
+#print(f"\n  Title to be used: {struc_title}\n  Filename to be used: {fname}")
 
 # create figure
-fig, ax = plt.subplots(figsize=(10,6))
+fig_x, ax_x = plt.subplots(figsize=(10,6))
+fig_y, ax_y = plt.subplots(figsize=(10,6))
 
 # empty list for integral scale bar graph
-int_scale_dict = {}
+int_scale_dict_x = {}
+int_scale_dict_y = {}
 
 # iterate over files
 for filename in sorted(os.listdir(lp)):
@@ -78,32 +81,52 @@ for filename in sorted(os.listdir(lp)):
             #plt.colorbar()
         
         # calculate rx and semivariogram, append int_scale
-        rx, semivar, int_scale = fn.semivariogram(arr)
-        int_scale_dict[filename[:s_cutoff]] = int_scale
+        rx, semivarx, int_scalex = fn.semivariogram(arr)
+        ry, semivary, int_scaley = fn.semivariogram(arr.T)
+        int_scale_dict_x[filename[:s_cutoff]] = int_scalex
+        int_scale_dict_y[filename[:s_cutoff]] = int_scaley
         
         # create figure
-        ax.plot(rx,semivar/np.max(semivar),label=f"{filename[:-17]}")
-
+        ax_x.plot(rx,semivarx/np.max(semivarx),label=f"{filename[:-17]}")
+        ax_y.plot(ry,semivary/np.max(semivary),label=f"{filename[:-17]}")
+        
+        
 # finish plotting and show
 
 # formatting and labels
-ax.set_xlabel(r'$r_x$',fontsize=20)
-ax.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
-ax.tick_params(labelsize=16)
-plt.legend(fontsize=16)
-ax.set_title(titlestring,fontsize=16)
-plt.savefig(os.path.join(root,'results','structure_functions',fname))
+ax_x.set_xlabel(r'$r_x$',fontsize=20)
+ax_x.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
+ax_x.tick_params(labelsize=16)
+ax_x.legend(fontsize=16)
+ax_x.set_title(struc_title+r", in $x$",fontsize=16)
+fig_x.savefig(os.path.join(root,'results','structure_functions',fname + '_x.png'))
+
+ax_y.set_xlabel(r'$r_y$',fontsize=20)
+ax_y.set_ylabel(r'$D_{\theta\theta}/D_{\theta\theta,max}$',fontsize=20)
+ax_y.tick_params(labelsize=16)
+ax_y.legend(fontsize=16)
+ax_y.set_title(struc_title+r", in $y$",fontsize=16)
+fig_y.savefig(os.path.join(root,'results','structure_functions',fname+'_y.png'))
+
 
 # bar graph of int length scales
-fig, ax = plt.subplots(figsize=(9,6))
 width=0.35
-ax.bar(int_scale_dict.keys(), int_scale_dict.values(),width=width)
-ax.set_title(f'Integral Het. Scale - {pattern}'+nstring[0],fontsize=20)
+
+fig, ax = plt.subplots(figsize=(9,6))
+ax.bar(int_scale_dict_x.keys(), int_scale_dict_x.values(),width=width)
+ax.set_title(int_scale_title+r" in $x$",fontsize=20)
 ax.set_ylabel(r'$L_p$',fontsize=20)
 ax.tick_params(labelsize=16)
-plt.savefig(os.path.join(root,'results','int_het_scale_comparison',fname))
-plt.show()
+plt.savefig(os.path.join(root,'results','int_het_scale_comparison',fname+'_x.png'))
+plt.close()
 
+fig, ax = plt.subplots(figsize=(9,6))
+ax.bar(int_scale_dict_y.keys(), int_scale_dict_y.values(),width=width)
+ax.set_title(int_scale_title+r" in $y$",fontsize=20)
+ax.set_ylabel(r'$L_p$',fontsize=20)
+ax.tick_params(labelsize=16)
+plt.savefig(os.path.join(root,'results','int_het_scale_comparison',fname+'_y.png'))
+plt.close()
 
 ##### using scikit-gstat #####
 
