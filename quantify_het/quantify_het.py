@@ -28,12 +28,12 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'beaufo_2000_aug31'
+pattern = 'esiber_2000_jul06'
 noise = False
 reso = 128
 #lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
 #lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
-lp = os.path.join(root, 'surfaces','beaufo_2000_aug31','arrays'); s_cutoff = -4
+lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -4
 #checkerboard=-17, strips=-22
 
 
