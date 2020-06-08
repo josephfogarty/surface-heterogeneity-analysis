@@ -28,12 +28,14 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'strip'
-noise = True
-reso = 96
+pattern = 'beaufo_2000_aug31'
+noise = False
+reso = 128
 #lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
-lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
+#lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
+lp = os.path.join(root, 'surfaces','beaufo_2000_aug31','arrays'); s_cutoff = -4
 #checkerboard=-17, strips=-22
+
 
 ################# all options should be able to be set above #################
 
@@ -47,7 +49,8 @@ else:
 fname = f'{pattern}' + nstring[1]
 struc_title = f"Structure Functions - {pattern}"+nstring[0]
 int_scale_title = f'Integral Het. Scale - {pattern}'+nstring[0]
-#print(f"\n  Title to be used: {struc_title}\n  Filename to be used: {fname}")
+print(f"\n  Title to be used: {struc_title}")
+print(f"  Filename to be used: {fname}")
 
 # create figure
 fig_x, ax_x = plt.subplots(figsize=(10,6))

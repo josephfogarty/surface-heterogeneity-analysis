@@ -23,7 +23,7 @@ def conv_np_array_reso(arr, new_reso):
     rows = new_reso
     cols = new_reso
     
-    print(f"\n  Converting Resolution from {np.shape(arr)[0]} to {new_reso}")
+    print(f"\n    Converting Resolution from {np.shape(arr)[0]} to {new_reso}")
     
     # see if array needs to be upscaled by calculating LCM factor
     LCM_factor = int(np.lcm(new_reso,np.shape(arr)[0])/np.shape(arr)[0])
@@ -33,12 +33,12 @@ def conv_np_array_reso(arr, new_reso):
         
         #upscale the array
         arr = np.kron(arr, np.ones((LCM_factor,LCM_factor)))
-        print(f"    Upscaling needed to {LCM_factor} and complete!")
+        print(f"      Upscaling needed to {LCM_factor} and complete!")
     
     # if the factor equals one, no upscaling is needed
     else:
         pass
-        print("    Upscaling not needed!")
+        print("      Upscaling not needed!")
     
     # the matrix to return
     shrunk = np.zeros((rows,cols))
@@ -67,7 +67,7 @@ def conv_np_array_reso(arr, new_reso):
             #print(f"  Shrunk[i,j] = {shrunk[i,j]}, {type(shrunk[i,j])}")
     
     # return
-    print("    Finished!\n")       
+    print("      Finished!\n")       
     return shrunk
 
 def shuffle(arr, n_sections):
@@ -177,7 +177,7 @@ def semivariogram(arr):
         print("    Semivariogram obtained and normalized")
         
         # cutoff
-        n = 0.5
+        n = 0.9
         print(f"    Using method: first maxima that is {n} from maximum")
         # normalized list of local maxima
         lmax = argrelextrema(semivarn, np.greater_equal)[0]
