@@ -105,7 +105,7 @@ def shuffle(arr, n_sections):
     return new_arr
 
 
-def semivariogram(arr):
+def semivariogram(arr,peak=False):
 
     """
     This is a brute-force semivariogram code which computes the structure
@@ -118,7 +118,7 @@ def semivariogram(arr):
     
     Built off of NumPy
     """
-     
+    
     # range of rx
     rx_vals = np.arange(np.shape(arr)[1])
     
@@ -137,7 +137,7 @@ def semivariogram(arr):
     # now we have a list of rx values and structure function values
     # rx_val and semivar - convert semivar to array
     semivar = np.array(semivar)
-    print("    Semivariogram obtained and normalized")
+    print("    Semivariogram obtained")
     
     # check for all zeros in semivar
     all_zeros = not np.any(semivar)
@@ -151,6 +151,52 @@ def semivariogram(arr):
         # but only for semivar once it reaches it's approx maximum value
         # for a periodic domain, this is done when the shift is
         # half of the domain
+        
+        # in the case where the peak is true (for ideal patterns)
+        if peak == True:
+            
+            # normalized semivariogram
+            semivarn = semivar/np.max(semivar)
+            
+            # calculate cutoff
+            n = 0.1
+            print(f"    Using PEAK method: first maxima that is {n} from maximum")
+            
+            # normalized list of local maxima
+            lmax = argrelextrema(semivarn, np.greater_equal)[0]
+        
+            # compare the absolute difference between 1 and the first maxima
+            for i in range(len(lmax)):
+                #print(i,lmax[i])
+                if abs(1.0-semivarn[lmax[i]]) <= n:
+                    cutoff_location = np.where(semivarn==semivarn[lmax[i]])[0][0]   
+                    print(f"    Max value found at rx={lmax[i]}")
+                    break
+                
+            # now cut the array and calculate integrand
+            integrand = 1.0 - (semivar[:cutoff_location+1]/np.max(semivar))
+            
+            # calculate change in rx
+            drx = 1.0
+            
+            # estimate integral using simpsons rule to get integral length scale
+            l_p = simps(integrand, dx=drx)
+            
+            return rx_vals, semivar, l_p
+
+
+        integrand = 1.0 - (semivar[:len(semivar)//2]/np.max(semivar))
+        
+        # calculate change in rx
+        # should be 1 for using the arange function
+        # but this might change later
+        drx = 1.0
+        
+        # estimate integral using simpsons rule to get integral length scale
+        l_p = simps(integrand, dx=drx)
+        # l_p = np.sum(integrand)
+        # print(l_p)
+            
         
         # now cut the array halfway and calculate integrand
         integrand = 1.0 - (semivar[:len(semivar)//2]/np.max(semivar))
@@ -277,10 +323,6 @@ def semi_old(arr):
         print("    All homogeneous in this direction, semivar is empty")
    
     return rx_vals, semivar, l_p
-
-
-
-
 
 
 

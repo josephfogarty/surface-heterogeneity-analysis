@@ -28,11 +28,16 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips
-pattern = 'esiber_2000_jul06'
+#                 beaufo_2000_aug31, esiber_2000_jul06
+#                 cafram_2000_aug07
+
+
+pattern = 'cafram_2000_aug07'
 noise = False
+peak = False
 reso = 128
-#lp = os.path.join(root, 'surfaces','checkerboard','arrays'); s_cutoff = -17
-#lp = os.path.join(root,'surfaces','strips','arrays','perp'); s_cutoff = -22
+#lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -17
+#lp = os.path.join(root,'surfaces',pattern,'arrays','perp'); s_cutoff = -22
 lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -4
 #checkerboard=-17, strips=-22
 
@@ -84,8 +89,8 @@ for filename in sorted(os.listdir(lp)):
             #plt.colorbar()
         
         # calculate rx and semivariogram, append int_scale
-        rx, semivarx, int_scalex = fn.semivariogram(arr)
-        ry, semivary, int_scaley = fn.semivariogram(arr.T)
+        rx, semivarx, int_scalex = fn.semivariogram(arr,peak=peak)
+        ry, semivary, int_scaley = fn.semivariogram(arr.T,peak=peak)
         int_scale_dict_x[filename[:s_cutoff]] = int_scalex
         int_scale_dict_y[filename[:s_cutoff]] = int_scaley
         
@@ -94,7 +99,7 @@ for filename in sorted(os.listdir(lp)):
         ax_y.plot(ry,semivary/np.max(semivary),label=f"{filename[:-17]}")
         
         
-# finish plotting and show
+### finish plotting and save ###
 
 # formatting and labels
 ax_x.set_xlabel(r'$r_x$',fontsize=20)
@@ -110,7 +115,6 @@ ax_y.tick_params(labelsize=16)
 ax_y.legend(fontsize=16)
 ax_y.set_title(struc_title+r", in $y$",fontsize=16)
 fig_y.savefig(os.path.join(root,'results','structure_functions',fname+'_y.png'))
-
 
 # bar graph of int length scales
 width=0.35
@@ -131,15 +135,34 @@ ax.tick_params(labelsize=16)
 plt.savefig(os.path.join(root,'results','int_het_scale_comparison',fname+'_y.png'))
 plt.close()
 
-##### using scikit-gstat #####
+### now save text files of int length scales ###
 
-#from skgstat import Variogram
-## random coordinates
-#coords = np.random.randint(0, np.shape(arr)[0], (150,2))
-#values = np.fromiter((arr[c[0], c[1]] for c in coords), float)
-#V = Variogram(coords,values)
-#V.plot()
-#V.distance_difference_plot()
+# columns should be same for both x and y
+csv_columns = list(int_scale_dict_x.keys())
+
+# csv filenames for both x and y
+csv_x = fname + "_x.csv"
+csv_y = fname + "_y.csv"
+
+# save files for x
+with open(os.path.join(root, 'results','int_het_scale_txts',csv_x), 'w') as f:
+    for key, value in int_scale_dict_x.items():
+        f.write('%s,%s\n' % (key, value))
+f.close()
+# and y
+with open(os.path.join(root, 'results','int_het_scale_txts',csv_y), 'w') as f:
+    for key, value in int_scale_dict_x.items():
+        f.write('%s,%s\n' % (key, value))
+f.close()
+
+
+
+
+
+
+
+
+
 
 
 
