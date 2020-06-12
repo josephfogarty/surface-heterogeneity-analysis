@@ -104,18 +104,86 @@ def shuffle(arr, n_sections):
 
     return new_arr
 
+
 def semivariogram(arr):
 
     """
-    This is a brute-force semivariogram code which (right now only in the 
-    x direction) computes the structure function across rows
+    This is a brute-force semivariogram code which computes the structure
+    function across rows
     
     This function also calculates the integral length scale using the method
     outlined in Bou-Zeid et. al (2007), JAS
     
     arr is the 2D array to be analyzed
-    """
     
+    Built off of NumPy
+    """
+     
+    # range of rx
+    rx_vals = np.arange(np.shape(arr)[1])
+    
+    # empty list for semivar
+    semivar = []
+    
+    # for each spatial translation vector
+    for rx in rx_vals:
+        
+        # get rolled array
+        rolled = np.roll(arr,rx,axis=1)
+
+        # calculate squared difference, average, and append to list
+        semivar.append(np.mean((arr - rolled)**2))
+    
+    # now we have a list of rx values and structure function values
+    # rx_val and semivar - convert semivar to array
+    semivar = np.array(semivar)
+    print("    Semivariogram obtained and normalized")
+    
+    # check for all zeros in semivar
+    all_zeros = not np.any(semivar)
+
+    #### calculate integrand for integral length scale ####
+    
+    # in the (usual) case where are not zeros in the semivariogram
+    if all_zeros == False:
+        
+        # calculate integral length scale via Bou-Zeid (2007)
+        # but only for semivar once it reaches it's approx maximum value
+        # for a periodic domain, this is done when the shift is
+        # half of the domain
+        
+        # now cut the array halfway and calculate integrand
+        integrand = 1.0 - (semivar[:len(semivar)//2]/np.max(semivar))
+        
+        # calculate change in rx
+        # should be 1 for using the arange function
+        # but this might change later
+        drx = 1.0
+        
+        # estimate integral using simpsons rule to get integral length scale
+        l_p = simps(integrand, dx=drx)
+        # l_p = np.sum(integrand)
+        # print(l_p)
+    
+    # but if there are zeros,
+    else:
+        l_p = len(semivar)
+        print("    All homogeneous in this direction, semivar is empty")
+   
+    return rx_vals, semivar, l_p
+
+
+def semi_old(arr):
+
+    """
+    This is the old brute-force semivariogram code that did not take
+    periodicity of the domain into accoutn
+    
+    arr is the 2D array to be analyzed
+    
+    Built off of NumPy
+    """
+
     # range of rx
     rx_vals = np.arange(np.shape(arr)[1])
     
