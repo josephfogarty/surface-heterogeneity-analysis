@@ -32,7 +32,7 @@ plt.close('all')
 #                 cafram_2000_aug07
 
 
-pattern = 'cafram_2000_aug07'
+pattern = 'beaufo_2000_aug31'
 noise = False
 peak = False
 reso = 128
@@ -151,7 +151,7 @@ with open(os.path.join(root, 'results','int_het_scale_txts',csv_x), 'w') as f:
 f.close()
 # and y
 with open(os.path.join(root, 'results','int_het_scale_txts',csv_y), 'w') as f:
-    for key, value in int_scale_dict_x.items():
+    for key, value in int_scale_dict_y.items():
         f.write('%s,%s\n' % (key, value))
 f.close()
 

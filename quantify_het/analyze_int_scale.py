@@ -36,13 +36,14 @@ pd_list = []
 
 # load in each pandas dataframe
 for csv_file in os.listdir(lp):
+    
     if csv_file.endswith('.csv'):
         
         # import filename
         print(f'\n  Importing {csv_file}')
         
         # read to pandas
-        df = pd.read_csv(os.path.join(lp,'checkerboard_noise_y.csv'),names=headers)
+        df = pd.read_csv(os.path.join(lp,csv_file),names=headers)
         
         # add filename column
         df['filename']=f'{csv_file[:-4]}'
@@ -54,3 +55,25 @@ for csv_file in os.listdir(lp):
 df = pd.concat(pd_list,ignore_index=True)        
 
 #### analyze data ####
+
+df_maps = df.loc[df['pattern'] == 'T_s_remote_ice']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
