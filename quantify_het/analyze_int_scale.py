@@ -22,6 +22,7 @@ os.chdir(os.path.join("create_surfaces"))
 # define constants - these are changed in class cnst in constants.py
 label = cnst.label
 root = cnst.root
+conv = cnst.conv
 
 # clear all plots
 plt.close('all')
@@ -61,8 +62,6 @@ df_maps = df.loc[df['pattern'] == 'T_s_remote_ice']
 
 # scale up
 # in this case, to the 10km by 10km domain for SHEBA maps
-reso = 128
-conv = 10000/reso
 df_maps['lp'] = conv*df_maps['lp']
 
 

@@ -17,6 +17,8 @@ class cnst(object):
     # spatial parameters
     Nx = 96 # number of grid cells in x direction
     Ny = 96 # number of grid cells in y direction
+    reso = 128
+    conv = 10000/reso
 
     # root path
     root = path.join("D:",sep,"surface-heterogeneity-analysis")

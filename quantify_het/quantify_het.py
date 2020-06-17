@@ -20,6 +20,8 @@ os.chdir(os.path.join("create_surfaces"))
 # define constants - these are changed in class cnst in constants.py
 label = cnst.label
 root = cnst.root
+reso = cnst.reso
+conv = cnst.conv
 
 # clear all plots
 plt.close('all')
@@ -30,12 +32,9 @@ plt.close('all')
 # current options: checkerboard, strips
 #                 beaufo_2000_aug31, esiber_2000_jul06
 #                 cafram_2000_aug07
-
-
 pattern = 'beaufo_2000_aug31'
 noise = False
 peak = False
-reso = 128
 #lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -17
 #lp = os.path.join(root,'surfaces',pattern,'arrays','perp'); s_cutoff = -22
 lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -4
