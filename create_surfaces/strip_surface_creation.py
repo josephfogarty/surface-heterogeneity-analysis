@@ -29,7 +29,7 @@ label = cnst.label
 root = cnst.root
 
 # bounds may need to be changed depending on label
-print(f"\n  Make sure bounds apply to {label}")
+print(f"\n  Make sure bounds for colorbar apply to {label}")
 
 # save paths for text and image files for strips
 sp = os.path.join(root,"surfaces","strips","arrays")
@@ -37,17 +37,18 @@ sp_img = os.path.join(root,"surfaces","strips","img")
 
 #### create the strip arrays, par (ideal) and perp (trans) ####
 
-# base array of all ice
-arr_base = np.full((Nx,Ny),water)
+# base array of all ice and water
+arr_base_w = np.full((Nx,Ny),water)
+arr_base_i = np.full((Nx,Ny),ice)
 
 # for two strips
-strip_02 = np.copy(arr_base)
+strip_02 = np.copy(arr_base_w)
 strip_02[:,:Nx//2] = ice
 strip_02_trans = strip_02.T
 
 # for four strips
 N = 4
-strip_04 = np.copy(arr_base)
+strip_04 = np.copy(arr_base_w)
 ind = np.arange(0,Nx,Nx//N)
 values = np.resize([1,2],N)
 for i, v in zip(ind,values):
@@ -56,7 +57,7 @@ strip_04_trans = strip_04.T
 
 # for 8 strips
 N = 8
-strip_08 = np.copy(arr_base)
+strip_08 = np.copy(arr_base_w)
 ind = np.arange(0,Nx,Nx//N)
 values = np.resize([1,2],N)
 for i, v in zip(ind,values):
@@ -66,7 +67,7 @@ strip_08_trans = strip_08.T
 
 # for 16 strips
 N = 16
-strip_16 = np.copy(arr_base)
+strip_16 = np.copy(arr_base_w)
 ind = np.arange(0,Nx,Nx//N)
 values = np.resize([1,2],N)
 for i, v in zip(ind,values):
@@ -76,7 +77,7 @@ strip_16_trans = strip_16.T
 
 # for 32 strips
 N = 32
-strip_32 = np.copy(arr_base)
+strip_32 = np.copy(arr_base_w)
 ind = np.arange(0,Nx,Nx//N)
 values = np.resize([1,2],N)
 for i, v in zip(ind,values):
@@ -86,6 +87,8 @@ strip_32_trans = strip_32.T
 #### write arrays and images to a file ####
 
 # save text files
+np.savetxt(os.path.join(sp,f"constant_ice_{label}_reso{Nx}.txt"), arr_base_i, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"constant_water_{label}_reso{Nx}.txt"), arr_base_w, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f"strip_02_perp_{label}_reso{Nx}.txt"), strip_02, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f"strip_04_perp_{label}_reso{Nx}.txt"), strip_04, delimiter=' ',fmt='%.2f')
 np.savetxt(os.path.join(sp,f"strip_08_perp_{label}_reso{Nx}.txt"), strip_08, delimiter=' ',fmt='%.2f')
