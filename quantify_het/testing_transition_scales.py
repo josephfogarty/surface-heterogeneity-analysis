@@ -57,19 +57,32 @@ print(f"  Filename to be used: {fname}")
 arr = np.loadtxt(os.path.join(lp,'T_s_remote_ice.txt'))
 print(f"\n  Importing from {os.path.join(lp,'T_s_remote_ice.txt')}")
 
-a = np.array([[0,0,1,1,1,1,1],
-             [0,2,0,0,1,1,1],
-             [0,2,0,0,1,1,1],
-             [0,2,1,1,1,0,0],
-             [0,3,2,2,0,2,1]])
+# Look for interval changes and pad with bool 1s on either sides to set the
+# first interval for each row and for setting boundary wrt the next row
+p = np.ones((len(arr),1), dtype=bool)
+m = np.hstack((p, arr[:,:-1]!=arr[:,1:], p))
 
-for row in arr:
-    d = np.diff(row) != 0
-    idx = np.concatenate(([0], np.flatnonzero(d) + 1))
-    c = np.diff(np.concatenate((idx, [len(row)])))
-    print(len(c))
-    print('v', row[idx])
-    print('c', c)
+# Look for interval change indices in flattened array version
+intv = m.sum(1).cumsum()-1
+
+# Get index and counts
+idx = np.diff(np.flatnonzero(m.ravel()))  
+count = np.delete(idx, intv[:-1])
+val = arr[m[:,:-1]]
+
+# Get couples and setup offsetted interval change indices
+grps = np.c_[val,count]
+intvo = np.r_[0,intv-np.arange(len(intv))]
+
+# Finally slice and get output for each row
+out = [grps[i:j] for (i,j) in zip(intvo[:-1], intvo[1:])]
+
+# obtain number of transitions and each transition length per row
+#for row in len(range(out)):
+#    print(row)
+
+
+
 
 
 

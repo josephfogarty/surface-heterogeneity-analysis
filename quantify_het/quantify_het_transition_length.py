@@ -54,26 +54,54 @@ print(f"  Filename to be used: {fname}")
 
 
 
-
-
-
-
-
-
-
 # iterate over files
-for filename in sorted(os.listdir(lp)):
-    
-    if filename.endswith(".txt"):
-        
-        # import array
-        arr = np.loadtxt(os.path.join(lp,filename))
-        print(f"\n  Importing {filename}")
-        
-        # change resolution of array - if needed
-        if int(reso) != np.shape(arr)[0]:
-            print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
-            arr = fn.conv_np_array_reso(arr, int(reso))
+arr = np.loadtxt(os.path.join(lp,'T_s_remote_ice.txt'))
+print(f"\n  Importing from {os.path.join(lp,'T_s_remote_ice.txt')}")
+
+# Look for interval changes and pad with bool 1s on either sides to set the
+# first interval for each row and for setting boundary wrt the next row
+p = np.ones((len(arr),1), dtype=bool)
+m = np.hstack((p, arr[:,:-1]!=arr[:,1:], p))
+
+# Look for interval change indices in flattened array version
+intv = m.sum(1).cumsum()-1
+
+# Get index and counts
+idx = np.diff(np.flatnonzero(m.ravel()))  
+count = np.delete(idx, intv[:-1])
+val = arr[m[:,:-1]]
+
+# Get couples and setup offsetted interval change indices
+grps = np.c_[val,count]
+intvo = np.r_[0,intv-np.arange(len(intv))]
+
+# Finally slice and get output for each row
+out = [grps[i:j] for (i,j) in zip(intvo[:-1], intvo[1:])]
+
+# obtain number of transitions and each transition length per row
+#for row in len(range(out)):
+#    print(row)
+
+
+
+
+
+
+
+
+## iterate over files
+#for filename in sorted(os.listdir(lp)):
+#    
+#    if filename.endswith(".txt"):
+#        
+#        # import array
+#        arr = np.loadtxt(os.path.join(lp,filename))
+#        print(f"\n  Importing {filename}")
+#        
+#        # change resolution of array - if needed
+#        if int(reso) != np.shape(arr)[0]:
+#            print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
+#            arr = fn.conv_np_array_reso(arr, int(reso))
         
         # calculate transition scales and lists
 
@@ -82,25 +110,6 @@ for filename in sorted(os.listdir(lp)):
 ### finish plotting and save ###
 
 
-### now save text files of int length scales ###
-
-# columns should be same for both x and y
-csv_columns = list(int_scale_dict_x.keys())
-
-# csv filenames for both x and y
-csv_x = fname + "_x.csv"
-csv_y = fname + "_y.csv"
-
-# save files for x
-with open(os.path.join(root, 'results','int_het_scale_txts',csv_x), 'w') as f:
-    for key, value in int_scale_dict_x.items():
-        f.write('%s,%s\n' % (key, value))
-f.close()
-# and y
-with open(os.path.join(root, 'results','int_het_scale_txts',csv_y), 'w') as f:
-    for key, value in int_scale_dict_y.items():
-        f.write('%s,%s\n' % (key, value))
-f.close()
 
 
 
