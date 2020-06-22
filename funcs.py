@@ -33,7 +33,7 @@ def conv_np_array_reso(arr, new_reso):
         
         #upscale the array
         arr = np.kron(arr, np.ones((LCM_factor,LCM_factor)))
-        print(f"      Upscaling needed to {LCM_factor} and complete!")
+        print(f"      Upscaling needed to LCM of {LCM_factor} - done!")
     
     # if the factor equals one, no upscaling is needed
     else:
@@ -218,7 +218,56 @@ def semivariogram(arr,peak=False):
    
     return rx_vals, semivar, l_p
 
-
+def calculate_transition_statistics(array):
+    
+    print(f"\n  Calculating transition statistics for array of shape {np.shape(array)}")
+    #calculate transition scales and lists
+    # first, look for interval changes and pad with bool 1s on sides to set the
+    # first interval for each row and for setting boundary wrt the next row
+    p = np.ones((len(array),1), dtype=bool)
+    m = np.hstack((p, array[:,:-1]!=array[:,1:], p))
+    
+    # Look for interval change indices in flattened array version
+    intv = m.sum(1).cumsum()-1
+    
+    # Get index and counts
+    idx = np.diff(np.flatnonzero(m.ravel()))  
+    count = np.delete(idx, intv[:-1])
+    val = array[m[:,:-1]]
+    
+    # Get couples and setup offsetted interval change indices
+    grps = np.c_[val,count]
+    intvo = np.r_[0,intv-np.arange(len(intv))]
+    
+    # Finally slice and get output for each row
+    out = [grps[i:j] for (i,j) in zip(intvo[:-1], intvo[1:])]
+    
+    # create list of lengths based on unique values of array
+    all_length_information = {}
+    for uv in np.unique(array[:,0]):
+        all_length_information[uv] = []
+    print(f"\n    Unique values for this array are: {np.unique(array)}")
+    
+    # obtain number of transitions and each transition length per row
+    for i in range(len(out)):
+        
+        # get array for this row
+        arr_row = out[i]
+        
+        # get unique values of 1st column
+        unique = np.unique(arr_row[:,0])
+        
+        # for each unique value
+        for value in unique:
+            
+            # get what rows has this unique value
+            inds = np.where(arr_row == value)[0]
+            
+            # append these values to list
+            for j in inds:
+                all_length_information[value].append(arr_row[j,1])
+    
+    return all_length_information
 
 
 
