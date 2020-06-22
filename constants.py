@@ -8,7 +8,7 @@ class cnst(object):
 
     # surface grid values
     label = 'theta'
-    ice = 266.15 # temp of ice, K
+    ice = 270.15 # 266.15 # temp of ice, K
     water = 274.15 # temp of water, K
     #ice = 0.01 # roughness of ice, m
     #water = 1.0 # roughness of water, m
