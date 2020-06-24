@@ -31,15 +31,16 @@ plt.close('all')
 
 # import the file
 # options: b2000aug31, e2001sep08, b2001sep03, c2000aug07, e2000jul06, e2000jul28
-pattern = 'e2000jul28'
+pattern = 'b2000aug31'
 #lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -17
 #lp = os.path.join(root,'surfaces',pattern,'arrays','perp'); s_cutoff = -22
 lp = os.path.join(root, 'surfaces',pattern+'.out'); s_cutoff = -4
 #checkerboard=-17, strips=-22
-
+#%%
 # load the large arrays
-arr = np.loadtxt(lp,delimiter=',')
+arr = np.loadtxt(lp)
 
+#%%
 # use this space for edits that need to be done
 print(np.shape(arr))
 print(np.unique(arr))
@@ -49,7 +50,8 @@ plt.show()
 
 
 
+#%%
 # save as the same file and 'overwrite' it
 arr = np.savetxt(lp,arr)
-
+#%%
 

@@ -246,7 +246,7 @@ def calculate_transition_statistics(array):
     all_length_information = {}
     for uv in np.unique(array[:,0]):
         all_length_information[uv] = []
-    print(f"\n    Unique values for this array are: {np.unique(array)}")
+    print(f"    Unique values for this array are: {np.unique(array)}")
     
     # obtain number of transitions and each transition length per row
     for i in range(len(out)):
