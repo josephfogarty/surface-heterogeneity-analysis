@@ -8,11 +8,16 @@ class cnst(object):
 
     # surface grid values
     label = 'theta'
-    ice = 270.15 # 266.15 # temp of ice, K
-    water = 274.15 # temp of water, K
-    #ice = 0.01 # roughness of ice, m
-    #water = 1.0 # roughness of water, m
+    iceT = 270.15 # 266.15 # temp of ice, K
+    waterT = 274.15 # temp of water, K
+    iceR = 0.01 # roughness of ice, m
+    waterR = 1.0 # roughness of water, m
     #label = 'rough'
+    
+    # template values
+    ice_temp = 1
+    water_temp = 2
+    pond_temp = 3
 
     # spatial parameters
     Nx = 96 # number of grid cells in x direction

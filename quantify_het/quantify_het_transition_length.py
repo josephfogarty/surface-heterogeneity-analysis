@@ -26,8 +26,11 @@ label = cnst.label
 root = cnst.root
 reso = cnst.reso
 conv = cnst.conv
-ice = cnst.ice
-water = cnst.water
+iceT = cnst.iceT
+waterT = cnst.waterT
+iceR = cnst.waterR
+waterR =cnst.waterR
+
 
 # clear all plots
 plt.close('all')
