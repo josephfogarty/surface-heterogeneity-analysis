@@ -40,7 +40,7 @@ patterns = ['b2000aug31','e2001sep08','b2001sep03',
             'c2000aug07','e2000jul06','e2000jul28']
 
 # choose pattern, and load array
-pattern = patterns[0]
+pattern = patterns[1]
 lp = os.path.join(root, 'surfaces',pattern+'.out')
 arr = np.loadtxt(lp)
     
@@ -53,24 +53,25 @@ plt.show()
 #%%
 
 # set ice, water, pond values
-ice_val = 15
-water_val = 3
-pond_val = 14
-fname = f'{pattern}.txt'
+ice_val = 7
+water_val = 6
+pond_val = 1
+fname = f'{pattern}.gz'
 
 # reassign - template with ponds
-arr_temp = np.copy(arr)
-arr_temp[arr_temp == ice_val] = icetemp
-arr_temp[arr_temp == water_val] = watertemp
-arr_temp[arr_temp == pond_val] = pondtemp
-np.savetxt(os.path.join(root,'surfaces','SIPS10k_templates','ponds',fname),arr)
+arr_temp_ponds = np.copy(arr)
+arr_temp_ponds[arr_temp_ponds == ice_val] = icetemp
+arr_temp_ponds[arr_temp_ponds == water_val] = watertemp
+arr_temp_ponds[arr_temp_ponds == pond_val] = pondtemp
+np.savetxt(os.path.join(root,'surfaces','SIPS10k_templates','ponds',fname),arr_temp_ponds)
 
 # reassign - template with no ponds
 arr_temp = np.copy(arr)
 arr_temp[arr_temp == ice_val] = icetemp
 arr_temp[arr_temp == water_val] = watertemp
 arr_temp[arr_temp == pond_val] = icetemp
-np.savetxt(os.path.join(root,'surfaces','SIPS10k_templates','no_pond',fname),arr)
+np.savetxt(os.path.join(root,'surfaces','SIPS10k_templates','no_ponds',fname),arr_temp)
+
 
 ## reassign - temperature where ponds = ice
 #arr_T = np.copy(arr)
