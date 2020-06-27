@@ -18,10 +18,7 @@ from constants import cnst
 os.chdir(os.path.join("create_surfaces"))
 
 # define constants - these are changed in class cnst in constants.py
-label = cnst.label
 root = cnst.root
-reso = cnst.reso
-conv = cnst.conv
 iceT = cnst.iceT
 waterT = cnst.waterT
 iceR = cnst.waterR
@@ -40,22 +37,20 @@ patterns = ['b2000aug31','e2001sep08','b2001sep03',
             'c2000aug07','e2000jul06','e2000jul28']
 
 # choose pattern, and load array
-pattern = patterns[1]
+pattern = patterns[5]
 lp = os.path.join(root, 'surfaces',pattern+'.out')
 arr = np.loadtxt(lp)
-    
+
 # print unique values, sixe, and show array
 print(f'\n  Unique values: {np.unique(arr)}')
 print(f'  Shape of array: {np.shape(arr)}')
-plt.matshow(arr)
-plt.show()
 
 #%%
 
 # set ice, water, pond values
-ice_val = 7
-water_val = 6
-pond_val = 1
+water_val = 2
+pond_val = 7
+ice_val = 9
 fname = f'{pattern}.gz'
 
 # reassign - template with ponds
@@ -72,6 +67,21 @@ arr_temp[arr_temp == water_val] = watertemp
 arr_temp[arr_temp == pond_val] = icetemp
 np.savetxt(os.path.join(root,'surfaces','SIPS10k_templates','no_ponds',fname),arr_temp)
 
+#%%
+
+plt.matshow(arr_temp)
+plt.show()
+
+print(f'\n  Unique values of arr_temp_ponds: {np.unique(arr_temp_ponds)}')
+print(f'\n  Unique values of arr_temp: {np.unique(arr_temp)}')
+
+#fig, ax = plt.subplots(ncols=2)
+#ax[0].matshow(arr_temp_ponds)
+##ax[0].colorbar()
+#ax[1].matshow(arr_temp)
+##ax[1].colorbar()
+#fig.colorbar(plt.matshow(arr_temp_ponds))
+#fig.show()
 
 ## reassign - temperature where ponds = ice
 #arr_T = np.copy(arr)

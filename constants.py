@@ -15,9 +15,9 @@ class cnst(object):
     #label = 'rough'
     
     # template values
-    ice_temp = 1
-    water_temp = 2
-    pond_temp = 3
+    ice_temp = 100
+    water_temp = 200
+    pond_temp = 300
 
     # spatial parameters
     Nx = 96 # number of grid cells in x direction

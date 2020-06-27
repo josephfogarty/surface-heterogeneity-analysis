@@ -1,14 +1,14 @@
-e2001sep08
-NA: 0
-water:6
-pond: 1
-ice: 7
-
 b2000aug31
 NA: 0
 water: 3
 pond: 14
 ice: 15
+
+e2001sep08
+NA: 0
+water:6
+pond: 1
+ice: 7
 
 b2001sep03
 NA: 0
