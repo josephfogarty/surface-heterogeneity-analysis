@@ -22,19 +22,19 @@ label = cnst.label
 root = cnst.root
 
 # final array resolution
-final_conv_reso = 160
+final_conv_reso = 200
 print(f"\n  The final array resolution is {final_conv_reso}")
 
 
 #### import and export path ####
-lp = os.path.join(root,"modify_surfaces","to_be_converted")
-sp = os.path.join(root,"modify_surfaces","completed")
+lp = os.path.join(root,"surfaces","SIPS10k_templates","no_ponds")
+sp = os.path.join(root,"surfaces","SIPS200_templates","no_ponds")
 
 # iterate through directory
 for filename in os.listdir(lp):
     
     # for all filenames that are .txt files
-    if filename.endswith(".txt"):
+    if filename.endswith(".gz"):
         
         # import array
         loaded_arr = np.loadtxt(os.path.join(lp,filename))
