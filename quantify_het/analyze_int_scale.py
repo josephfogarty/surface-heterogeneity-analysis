@@ -30,6 +30,7 @@ project = 'SIPS200'
 fname = project + '_compmap.png'
 lp = os.path.join(root,'results','int_het_scale_txts',project)
 compfig_sp = os.path.join(root,'results','int_het_scale_comparison',project,fname)
+df_sp = os.path.join(root, 'results','scale_trans_comp',project)
 
 #### everything should be able to be done above ####
 
@@ -57,7 +58,10 @@ for csv_file in os.listdir(lp):
         pd_list.append(df)
 
 # now concatenate
-df = pd.concat(pd_list,ignore_index=True)        
+df = pd.concat(pd_list,ignore_index=True)
+
+# write the dataframe as a csv
+df.to_csv(os.path.join(df_sp,'int_het_scale_statistics.csv'))   
 
 #%%
 

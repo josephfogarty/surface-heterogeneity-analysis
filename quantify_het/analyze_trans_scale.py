@@ -36,6 +36,7 @@ plt.close('all')
 project = 'SIPS200'
 lp = os.path.join(root,'results','transition_scale_txts',project)
 sp = os.path.join(root, 'results','trans_scale_barplots',project)
+df_sp = os.path.join(root, 'results','scale_trans_comp',project)
 
 # bar graph properties (for later)
 width = 0.35
@@ -95,6 +96,8 @@ for pattern in labels:
 # when finished, set 'surface' to be the index
 df.set_index('sfc')
 
+# write the dataframe as a csv
+df.to_csv(os.path.join(df_sp,'trans_length_statistics.csv'))
 #%%
 #### Now plot some bar graphs, using the pandas datafram above ####
 #### You can sort each dataframe using strings such as '_x', '_ice', etc ####
@@ -140,6 +143,54 @@ ax.set_xticklabels(labels,rotation=45)
 ax.legend()
 plt.tight_layout()
 plt.savefig(os.path.join(sp,map_comps+'_mean_comp_icewater.png'))
+
+
+
+
+
+
+# plot median length for all and save
+fig, ax = plt.subplots()
+ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['median']),
+       width)
+ax.set_ylabel('Median')
+ax.set_title('Median of All Ice/Water Transition Lengths')
+ax.set_xticklabels(labels,rotation=45)
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_median.png'))
+
+# plot mean length for x/y comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_x',case=False)]['median']),
+                width, label=r'$x$')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_y',case=False)]['median']),
+                width, label=r'$y$')
+ax.set_ylabel('Median')
+ax.set_title('Comparison of Transition Length Median between $x$ and $y$')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_median_comp_xy.png'))
+
+# plot mean length for ice/water comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_water',case=False)]['median']),
+                width, label='Water')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_ice',case=False)]['median']),
+                width, label='Ice')
+ax.set_ylabel('Median')
+ax.set_title('Comparison of Transition Length Median between Ice and Water')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_median_comp_icewater.png'))
+
 
 
 
