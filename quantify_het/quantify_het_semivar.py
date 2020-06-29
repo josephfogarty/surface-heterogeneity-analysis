@@ -44,7 +44,10 @@ s_cutoff = -3
 #checkerboard=-17, strips=-22
 
 
-################# all options should be able to be set above #################
+############################################################
+######## all options should be able to be set above ########
+############################################################
+
 
 # set strings used to save variables from parameters set above
 # titlestring

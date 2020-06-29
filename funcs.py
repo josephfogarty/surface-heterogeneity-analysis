@@ -248,7 +248,7 @@ def calculate_transition_statistics(array):
     
     # create list of lengths based on unique values of array
     all_length_information = {}
-    for uv in np.unique(array[:,0]):
+    for uv in np.unique(array):
         all_length_information[uv] = []
     print(f"    Unique values for this array are: {np.unique(array)}")
     

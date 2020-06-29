@@ -41,42 +41,44 @@ plt.close('all')
 # current options: checkerboard, strips, SIPS200, SIPS10k
 project = 'SIPS200'
 lp = os.path.join(root, 'surfaces','SIPS200_templates','no_ponds')
-trans_stats = os.path.join(root,'results','transition_scale_txts',project)
+trans_stats_sp = os.path.join(root,'results','transition_scale_txts',project)
 s_cutoff = -3
 
 
-################# all options should be able to be set above #################
+############################################################
+######## all options should be able to be set above ########
+############################################################
+
 
 # set strings used to save variables from parameters set above
 # set filename and titlestring for saving
-fname = f'{pattern}'
-print(f"  Filename to be used: {fname}")
 
-# load the array
-arr = np.loadtxt(os.path.join(lp,'T_s_remote_ice.txt'))
-print(f"\n  Importing from {os.path.join(lp,'T_s_remote_ice.txt')}")
+# iterate over files
+for filename in sorted(os.listdir(lp)):
+    
+    if filename.endswith(".gz"):
 
-# change resolution of array - if needed
-if int(reso) != np.shape(arr)[0]:
-    print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
-    arr = fn.conv_np_array_reso(arr, int(reso))
+        # load the array
+        arr = np.loadtxt(os.path.join(lp,filename))
+        pattern = filename[:-3]
+        print(f"\n  Importing {filename}")
 
-# get transition statistics in x and y
-transtats_x = fn.calculate_transition_statistics(arr)
-transtats_y = fn.calculate_transition_statistics(arr.T)
+        # get transition statistics in x and y
+        transtats_x = fn.calculate_transition_statistics(arr)
+        transtats_y = fn.calculate_transition_statistics(arr.T)
 
-# savepath for saving this data
-sp_x = os.path.join(root,'results','transition_scale_txts',f'{pattern}_transcales_x.txt')
-sp_y = os.path.join(root,'results','transition_scale_txts',f'{pattern}_transcales_y.txt')
-
-# save teh files
-with open(sp_x, 'w') as file:
-     file.write(json.dumps(transtats_x)) # use `json.loads` to do the reverse
-file.close()
-
-with open(sp_y, 'w') as file:
-     file.write(json.dumps(transtats_y)) # use `json.loads` to do the reverse
-file.close()
+        # savepath for saving this data
+        sp_x = os.path.join(trans_stats_sp,f'{pattern}_transcales_x.txt')
+        sp_y = os.path.join(trans_stats_sp,f'{pattern}_transcales_y.txt')
+        
+        # save the files
+        with open(sp_x, 'w') as file:
+             file.write(json.dumps(transtats_x)) # use `json.loads` to do the reverse
+        file.close()
+        
+        with open(sp_y, 'w') as file:
+             file.write(json.dumps(transtats_y)) # use `json.loads` to do the reverse
+        file.close()
 
 
 

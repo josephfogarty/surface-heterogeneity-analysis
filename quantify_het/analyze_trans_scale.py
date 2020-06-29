@@ -19,7 +19,6 @@ mpl.rcParams.update(mpl.rcParamsDefault)
 # import constants and funcs by going up one, importing, then going back down
 os.chdir(os.path.join("D:",os.sep,"surface-heterogeneity-analysis"))
 from constants import cnst
-import funcs as fn
 os.chdir(os.path.join("create_surfaces"))
 
 # define constants - these are changed in class cnst in constants.py
@@ -27,20 +26,22 @@ label = cnst.label
 root = cnst.root
 reso = cnst.reso
 conv = cnst.conv
-ice = cnst.ice
-water = cnst.water
+ice = float(cnst.ice_temp)
+water = float(cnst.water_temp)
 
 # clear all plots
 plt.close('all')
 
-# load the transition length data                 
-patterns = ['beaufo_2000_aug31', 'cafram_2000_aug07', 'esiber_2000_jul06']
+# parameters
+project = 'SIPS200'
+lp = os.path.join(root,'results','transition_scale_txts',project)
+sp = os.path.join(root, 'results','trans_scale_barplots',project)
 
 # bar graph properties (for later)
 width = 0.35
-labels = ['beaufo', 'cafram', 'esiber']
-map_comps = 'BCE'
-sp = os.path.join(root, 'results','transition_scale_sk_barplots')
+labels = ['b2000aug31', 'b2001sep03', 'c2000aug07',
+          'e2000jul06', 'e2000jul28', 'e2001sep08']
+map_comps = 'six_original'
 x = np.arange(len(labels))  # the label locations
 
 ############################################################
@@ -51,11 +52,10 @@ x = np.arange(len(labels))  # the label locations
 df = pd.DataFrame(columns=['sfc','mean','median','max','min',
                            'variance','skewness','kurtosis'])
 
-# load data and calculate statistics
-for pattern in patterns:
+# iterate over files
+for pattern in labels:
     
-    # base load path
-    lp = os.path.join(root, 'results','transition_scale_txts')
+    print(f'\n  For {pattern}...')
     
     # get two filenames for x and y
     filename_x = pattern + '_transcales_x.txt'
@@ -95,26 +95,113 @@ for pattern in patterns:
 # when finished, set 'surface' to be the index
 df.set_index('sfc')
 
+#%%
 #### Now plot some bar graphs, using the pandas datafram above ####
 #### You can sort each dataframe using strings such as '_x', '_ice', etc ####
 
-# plot skewness for ALL and save
+# plot mean length for all and save
+fig, ax = plt.subplots()
+ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['mean']),
+       width)
+ax.set_ylabel('Mean')
+ax.set_title('Mean of All Ice/Water Transition Lengths')
+ax.set_xticklabels(labels,rotation=45)
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_mean.png'))
+
+# plot mean length for x/y comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_x',case=False)]['mean']),
+                width, label=r'$x$')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_y',case=False)]['mean']),
+                width, label=r'$y$')
+ax.set_ylabel('Mean')
+ax.set_title('Comparison of Transition Length Mean between $x$ and $y$')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_mean_comp_xy.png'))
+
+# plot mean length for ice/water comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_water',case=False)]['mean']),
+                width, label='Water')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_ice',case=False)]['mean']),
+                width, label='Ice')
+ax.set_ylabel('Mean')
+ax.set_title('Comparison of Transition Length Mean between Ice and Water')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_mean_comp_icewater.png'))
+
+
+
+
+
+
+# plot variance length for all and save
+fig, ax = plt.subplots()
+ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['variance']),
+       width)
+ax.set_ylabel('Variance')
+ax.set_title('Variance of All Ice/Water Transition Lengths')
+ax.set_xticklabels(labels,rotation=45)
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_var.png'))
+
+# plot variance length for x/y comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_x',case=False)]['variance']),
+                width, label=r'$x$')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_y',case=False)]['variance']),
+                width, label=r'$y$')
+ax.set_ylabel('Variance')
+ax.set_title('Comparison of Transition Length Variance between $x$ and $y$')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_var_comp_xy.png'))
+
+# plot variance length for ice/water comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_water',case=False)]['variance']),
+                width, label='Water')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_ice',case=False)]['variance']),
+                width, label='Ice')
+ax.set_ylabel('Variance')
+ax.set_title('Comparison of Transition Length Variance between Ice and Water')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_var_comp_icewater.png'))
+
+
+
+
+
+
+
+# plot skewness for all and save
 fig, ax = plt.subplots()
 ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['skewness']),
        width)
 ax.set_ylabel('Skewness')
 ax.set_title('Skewness of All Ice/Water Transition Lengths')
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels,rotation=45)
 plt.savefig(os.path.join(sp,map_comps+'_skewness.png'))
-
-# plot kurtosis for ALL and save
-fig, ax = plt.subplots()
-ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['kurtosis']),
-       width)
-ax.set_ylabel('Kurtosis')
-ax.set_title('Kurtosis of All Ice/Water Transition Lengths')
-ax.set_xticklabels(labels)
-plt.savefig(os.path.join(sp,map_comps+'_kurtosis.png'))
 
 # plot skewness for x/y comparison and save
 fig, ax = plt.subplots()
@@ -127,24 +214,10 @@ rects2 = ax.bar(x + width/2,
 ax.set_ylabel('Skewness')
 ax.set_title('Comparison of Transition Length Skewness between $x$ and $y$')
 ax.set_xticks(x)
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels,rotation=45)
 ax.legend()
+plt.tight_layout()
 plt.savefig(os.path.join(sp,map_comps+'_skewness_comp_xy.png'))
-
-# plot kurtosis for x/y comparison and save
-fig, ax = plt.subplots()
-rects1 = ax.bar(x - width/2,
-                list(df[df.sfc.str.contains('_x',case=False)]['kurtosis']),
-                width, label=r'$x$')
-rects2 = ax.bar(x + width/2,
-                list(df[df.sfc.str.contains('_y',case=False)]['kurtosis']),
-                width, label=r'$y$')
-ax.set_ylabel('Skewness')
-ax.set_title('Comparison of Transition Length Kurtosis between $x$ and $y$')
-ax.set_xticks(x)
-ax.set_xticklabels(labels)
-ax.legend()
-plt.savefig(os.path.join(sp,map_comps+'_kurtosis_comp_xy.png'))
 
 # plot skewness for ice/water comparison and save
 fig, ax = plt.subplots()
@@ -157,9 +230,42 @@ rects2 = ax.bar(x + width/2,
 ax.set_ylabel('Skewness')
 ax.set_title('Comparison of Transition Length Skewness between Ice and Water')
 ax.set_xticks(x)
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels,rotation=45)
 ax.legend()
+plt.tight_layout()
 plt.savefig(os.path.join(sp,map_comps+'_skewness_comp_icewater.png'))
+
+
+
+
+
+
+
+# plot kurtosis for ALL and save
+fig, ax = plt.subplots()
+ax.bar(labels, list(df[df.sfc.str.contains('_all',case=False)]['kurtosis']),
+       width)
+ax.set_ylabel('Kurtosis')
+ax.set_title('Kurtosis of All Ice/Water Transition Lengths')
+ax.set_xticklabels(labels,rotation=45)
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_kurtosis.png'))
+
+# plot kurtosis for x/y comparison and save
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2,
+                list(df[df.sfc.str.contains('_x',case=False)]['kurtosis']),
+                width, label=r'$x$')
+rects2 = ax.bar(x + width/2,
+                list(df[df.sfc.str.contains('_y',case=False)]['kurtosis']),
+                width, label=r'$y$')
+ax.set_ylabel('Skewness')
+ax.set_title('Comparison of Transition Length Kurtosis between $x$ and $y$')
+ax.set_xticks(x)
+ax.set_xticklabels(labels,rotation=45)
+ax.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(sp,map_comps+'_kurtosis_comp_xy.png'))
 
 # plot kurtosis for ice/water comparison and save
 fig, ax = plt.subplots()
@@ -172,8 +278,9 @@ rects2 = ax.bar(x + width/2,
 ax.set_ylabel('Kurtosis')
 ax.set_title('Comparison of Transition Length Kurtosis between Ice and Water')
 ax.set_xticks(x)
-ax.set_xticklabels(labels)
+ax.set_xticklabels(labels,rotation=45)
 ax.legend()
+plt.tight_layout()
 plt.savefig(os.path.join(sp,map_comps+'_kurtosis_comp_icewater.png'))
 
 
