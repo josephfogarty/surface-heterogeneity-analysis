@@ -20,7 +20,6 @@ os.chdir(os.path.join("create_surfaces"))
 # define constants - these are changed in class cnst in constants.py
 label = cnst.label
 root = cnst.root
-reso = 10000
 conv = cnst.conv
 ice_temp = cnst.ice_temp
 water_temp = cnst.water_temp
@@ -34,10 +33,10 @@ plt.close('all')
 
 # load the array text file from the surface folder
 # current options: checkerboard, strips, SIPS200, SIPS10k
-project = 'SIPS10k'
+project = 'SIPS200'
 noise = False
 peak = False
-lp = os.path.join(root, 'surfaces','SIPS10k_templates','no_ponds','to_analyze')
+lp = os.path.join(root, 'surfaces','SIPS200_templates','no_ponds')
 semivariogram_sp = os.path.join(root,'results','structure_functions',project)
 int_bar_graph_sp = os.path.join(root,'results','int_het_scale_comparison',project)
 int_scale_csv_sp = os.path.join(root, 'results','int_het_scale_txts',project)
@@ -83,10 +82,10 @@ for filename in sorted(os.listdir(lp)):
         struc_title = f"Structure Functions - {fname}"
         int_scale_title = f'Integral Het. Scale - {fname}'
         
-        # change resolution of array - if needed
-        if int(reso) != np.shape(arr)[0]:
-            print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
-            arr = fn.conv_np_array_reso(arr, int(reso))
+#        # change resolution of array - if needed
+#        if int(reso) != np.shape(arr)[0]:
+#            print(f"\n    Converting array from {np.shape(arr)} to reso={reso}")
+#            arr = fn.conv_np_array_reso(arr, int(reso))
         
         # add noise to array, if flagged
         if noise:
@@ -110,6 +109,7 @@ for filename in sorted(os.listdir(lp)):
         ax_x.tick_params(labelsize=16)
         ax_x.legend(fontsize=16)
         ax_x.set_title(struc_title+r", in $x$",fontsize=16)
+        fig_x.tight_layout()
         fig_x.savefig(os.path.join(semivariogram_sp,fname + '_x.png'))
         
         # create semivariogram in y
@@ -120,6 +120,7 @@ for filename in sorted(os.listdir(lp)):
         ax_y.tick_params(labelsize=16)
         ax_y.legend(fontsize=16)
         ax_y.set_title(struc_title+r", in $y$",fontsize=16)
+        fig_y.tight_layout()
         fig_y.savefig(os.path.join(semivariogram_sp,fname+'_y.png'))
 
         

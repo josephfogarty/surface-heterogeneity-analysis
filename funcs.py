@@ -120,13 +120,13 @@ def semivariogram(arr,peak=False):
     """
     
     # range of rx
-    rx_vals = np.arange(np.shape(arr)[1])
+    rx_vals = np.arange(np.shape(arr)[1]//2)
     
     # empty list for semivar
     semivar = []
     
     # for each spatial translation vector
-    for rx in rx_vals//2:
+    for rx in rx_vals:
         
         # print rx (optional)
         rxl = len(rx_vals)
