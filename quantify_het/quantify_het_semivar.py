@@ -58,6 +58,12 @@ else:
 int_scale_dict_x = {}
 int_scale_dict_y = {}
 
+# list all files to do (should only be one for 10k case)
+print("\n  Files to work with this run:")
+for filename in sorted(os.listdir(lp)):
+    if filename.endswith(".gz"):
+        print(f'    {filename}')
+
 # iterate over files
 for filename in sorted(os.listdir(lp)):
     
