@@ -8,7 +8,7 @@ class cnst(object):
 
     # surface grid values
     label = 'theta'
-    iceT = 270.15 # 266.15 # temp of ice, K
+    iceT = 266.15 # 266.15 # temp of ice, K
     waterT = 274.15 # temp of water, K
     iceR = 0.01 # roughness of ice, m
     waterR = 1.0 # roughness of water, m
@@ -22,7 +22,7 @@ class cnst(object):
     # spatial parameters
     Nx = 96 # number of grid cells in x direction
     Ny = 96 # number of grid cells in y direction
-    reso = 96
+    reso = 200
     conv = 10000/reso
 
     # root path

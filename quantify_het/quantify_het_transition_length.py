@@ -38,14 +38,11 @@ plt.close('all')
 ##### load maps and calculate transition to compare #####
 
 # load the array text file from the surface folder
-# current options: checkerboard, strips
-#                 beaufo_2000_aug31, esiber_2000_jul06
-#                 cafram_2000_aug07
-pattern = 'cafram_2000_aug07'
-#lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -17
-#lp = os.path.join(root,'surfaces',pattern,'arrays','perp'); s_cutoff = -22
-lp = os.path.join(root, 'surfaces',pattern,'arrays'); s_cutoff = -4
-#checkerboard=-17, strips=-22
+# current options: checkerboard, strips, SIPS200, SIPS10k
+project = 'SIPS200'
+lp = os.path.join(root, 'surfaces','SIPS200_templates','no_ponds')
+trans_stats = os.path.join(root,'results','transition_scale_txts',project)
+s_cutoff = -3
 
 
 ################# all options should be able to be set above #################
@@ -72,8 +69,7 @@ transtats_y = fn.calculate_transition_statistics(arr.T)
 sp_x = os.path.join(root,'results','transition_scale_txts',f'{pattern}_transcales_x.txt')
 sp_y = os.path.join(root,'results','transition_scale_txts',f'{pattern}_transcales_y.txt')
 
-
-
+# save teh files
 with open(sp_x, 'w') as file:
      file.write(json.dumps(transtats_x)) # use `json.loads` to do the reverse
 file.close()

@@ -126,7 +126,11 @@ def semivariogram(arr,peak=False):
     semivar = []
     
     # for each spatial translation vector
-    for rx in rx_vals:
+    for rx in rx_vals//2:
+        
+        # print rx (optional)
+        rxl = len(rx_vals)
+        print(f'  Progress: {rx}/{rxl}, {rx/rxl*100:.2f}%')
         
         # get rolled array
         rolled = np.roll(arr,rx,axis=1)
