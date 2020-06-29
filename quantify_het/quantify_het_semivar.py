@@ -37,7 +37,7 @@ plt.close('all')
 project = 'SIPS10k'
 noise = False
 peak = False
-lp = os.path.join(root, 'surfaces','SIPS10k_templates','no_ponds')
+lp = os.path.join(root, 'surfaces','SIPS10k_templates','no_ponds','to_analyze')
 semivariogram_sp = os.path.join(root,'results','structure_functions',project)
 int_bar_graph_sp = os.path.join(root,'results','int_het_scale_comparison',project)
 int_scale_csv_sp = os.path.join(root, 'results','int_het_scale_txts',project)
