@@ -7,8 +7,6 @@ using length between transitions
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import pandas as pd
-from scipy import stats
 import json
 
 # reset matplotlib to defalt settings
@@ -26,11 +24,6 @@ label = cnst.label
 root = cnst.root
 reso = cnst.reso
 conv = cnst.conv
-iceT = cnst.iceT
-waterT = cnst.waterT
-iceR = cnst.waterR
-waterR =cnst.waterR
-
 
 # clear all plots
 plt.close('all')
@@ -48,10 +41,6 @@ s_cutoff = -3
 ############################################################
 ######## all options should be able to be set above ########
 ############################################################
-
-
-# set strings used to save variables from parameters set above
-# set filename and titlestring for saving
 
 # iterate over files
 for filename in sorted(os.listdir(lp)):

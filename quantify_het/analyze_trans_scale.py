@@ -71,8 +71,8 @@ for pattern in labels:
                            + transtats_y[str(ice)]  + transtats_y[str(water)]
     x_lengths = transtats_x[str(ice)] + transtats_x[str(water)]
     y_lengths = transtats_y[str(ice)] + transtats_y[str(water)]
-    water_lengths = transtats_x[str(ice)] + transtats_y[str(ice)]
-    ice_lengths = transtats_x[str(water)] + transtats_y[str(water)]
+    water_lengths = transtats_x[str(water)] + transtats_y[str(water)]
+    ice_lengths = transtats_x[str(ice)] + transtats_y[str(ice)]
     
     # create list to loop through
     trans_length_list = [(all_lengths, '_all'), 
@@ -336,7 +336,7 @@ plt.savefig(os.path.join(sp,map_comps+'_kurtosis_comp_icewater.png'))
 
 
 
-
+plt.close('all')
 
 ### PDF of transition lengths ###
 #### need to rework this section ####
