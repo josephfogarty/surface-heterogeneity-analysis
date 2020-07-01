@@ -23,8 +23,8 @@ norm = BoundaryNorm(bounds,cmap.N)
 # define constants - these are changed in class cnst in constants.py
 Nx = cnst.Nx
 Ny = cnst.Ny
-ice = cnst.ice
-water = cnst.water
+ice = cnst.iceT
+water = cnst.waterT
 label = cnst.label
 root = cnst.root
 

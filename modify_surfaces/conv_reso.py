@@ -25,16 +25,15 @@ root = cnst.root
 final_conv_reso = 200
 print(f"\n  The final array resolution is {final_conv_reso}")
 
-
 #### import and export path ####
-lp = os.path.join(root,"surfaces","SIPS10k_templates","no_ponds")
-sp = os.path.join(root,"surfaces","SIPS200_templates","no_ponds")
+lp = os.path.join(root,"modify_surfaces","to_be_converted")
+sp = os.path.join(root,"modify_surfaces","completed")
 
 # iterate through directory
 for filename in os.listdir(lp):
     
     # for all filenames that are .txt files
-    if filename.endswith(".gz"):
+    if filename.endswith(".txt") or filename.endswith(".gz"):
         
         # import array
         loaded_arr = np.loadtxt(os.path.join(lp,filename))
@@ -43,11 +42,13 @@ for filename in os.listdir(lp):
         conv_arr = fn.conv_np_array_reso(loaded_arr, final_conv_reso)
         
         # check the unique values
-        print(f"\n    The unique value of the converted array is {np.unique(conv_arr)}")
+        print(f"\n    The unique values of the converted array is {np.unique(conv_arr)}")
+        for uv in np.unique(conv_arr):
+            print(f"    The value {uv} occurs {np.count_nonzero(conv_arr == uv)} times")
         print(f"    The size of the array {np.shape(conv_arr)}")
         
         # save to the completed folder with the same name
-        np.savetxt(os.path.join(sp,filename), conv_arr, delimiter=' ',fmt='%.5e')
+        np.savetxt(os.path.join(sp,filename), conv_arr, delimiter=' ',fmt='%.3e')
         print(f"    File {filename} has been imported, converted, and saved")
         
         # testing to see if it was done correctly
@@ -58,7 +59,7 @@ for filename in os.listdir(lp):
         fig.colorbar(im1, ax=ax[1])
         plt.show()
         
-#plt.close('all')
+plt.close('all')
 
 
 print(f"\n  Finished - exiting.\n")
