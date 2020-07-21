@@ -22,7 +22,7 @@ label = cnst.label
 root = cnst.root
 
 # final array resolution
-final_conv_reso = 200
+final_conv_reso = 100
 print(f"\n  The final array resolution is {final_conv_reso}")
 
 #### import and export path ####

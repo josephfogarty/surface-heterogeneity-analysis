@@ -10,8 +10,8 @@ class cnst(object):
     label = 'theta'
     iceT = 270 # 266.15 # temp of ice, K
     waterT = 274 # temp of water, K
-    iceR = 0.01 # roughness of ice, m
-    waterR = 1.0 # roughness of water, m
+    iceR = 1.0 # roughness of ice, m
+    waterR = 0.01 # roughness of water, m
     #label = 'rough'
     
     # template values
