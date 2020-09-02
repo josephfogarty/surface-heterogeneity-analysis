@@ -23,8 +23,8 @@ norm = BoundaryNorm(bounds,cmap.N)
 # define constants - these are changed in class cnst in constants.py
 Nx = cnst.Nx
 Ny = cnst.Ny
-ice = cnst.iceR
-water = cnst.waterR
+ice = cnst.iceT
+water = cnst.waterT
 label = cnst.label
 root = cnst.root
 
@@ -86,19 +86,22 @@ strip_32_trans = strip_32.T
 
 #### write arrays and images to a file ####
 
+# choose format
+fm = '%.2e'
+
 # save text files
-np.savetxt(os.path.join(sp,f"constant_ice_{label}_reso{Nx}.txt"), arr_base_i, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"constant_water_{label}_reso{Nx}.txt"), arr_base_w, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_02_perp_{label}_reso{Nx}.txt"), strip_02, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_04_perp_{label}_reso{Nx}.txt"), strip_04, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_08_perp_{label}_reso{Nx}.txt"), strip_08, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_16_perp_{label}_reso{Nx}.txt"), strip_16, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_32_perp_{label}_reso{Nx}.txt"), strip_32, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_02_par_{label}_reso{Nx}.txt"), strip_02_trans, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_04_par_{label}_reso{Nx}.txt"), strip_04_trans, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_08_par_{label}_reso{Nx}.txt"), strip_08_trans, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_16_par_{label}_reso{Nx}.txt"), strip_16_trans, delimiter=' ',fmt='%.2f')
-np.savetxt(os.path.join(sp,f"strip_32_par_{label}_reso{Nx}.txt"), strip_32_trans, delimiter=' ',fmt='%.2f')
+np.savetxt(os.path.join(sp,f"constant_ice_{label}_reso{Nx}.txt"), arr_base_i, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"constant_water_{label}_reso{Nx}.txt"), arr_base_w, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_02_perp_{label}_reso{Nx}.txt"), strip_02, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_04_perp_{label}_reso{Nx}.txt"), strip_04, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_08_perp_{label}_reso{Nx}.txt"), strip_08, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_16_perp_{label}_reso{Nx}.txt"), strip_16, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_32_perp_{label}_reso{Nx}.txt"), strip_32, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_02_par_{label}_reso{Nx}.txt"), strip_02_trans, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_04_par_{label}_reso{Nx}.txt"), strip_04_trans, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_08_par_{label}_reso{Nx}.txt"), strip_08_trans, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_16_par_{label}_reso{Nx}.txt"), strip_16_trans, delimiter=' ',fmt=fm)
+np.savetxt(os.path.join(sp,f"strip_32_par_{label}_reso{Nx}.txt"), strip_32_trans, delimiter=' ',fmt=fm)
 
 
 # save images of strip files
