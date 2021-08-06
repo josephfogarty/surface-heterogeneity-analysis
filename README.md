@@ -4,7 +4,7 @@ This repo contains codes for creating, modifying, and quantifying surface hetero
 
 ## Structure
 
-This sectiond details the structure of this repository. Outside of the following directories, the codes constants.py and funcs.py contain universal variables and functions used throughout the codes.
+This section details the structure of this repository. Outside of the following directories, the codes constants.py and funcs.py contain universal variables and functions used throughout the codes.
 
 ### Creating Surfaces
 
@@ -22,10 +22,6 @@ Currently, the the only function in the `modify_surfaces` folder is one that con
 
 The only code in the folder `quantify_het` contains the code for quantifying the heterogeneity of a surface using semivariograms. For more details on this process, see the method outlined in Bou-Zeid et al. (2007, JAS) doi: https://doi.org/10.1175/JAS3826.1
 
-
 ### Results
 
 All results from the `quantifying_het` folder will be stored here. This includes semivariograms, heterogeneity scales, and all comparisons between different patterns.
-
-
-

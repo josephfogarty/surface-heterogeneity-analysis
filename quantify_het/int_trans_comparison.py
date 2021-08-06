@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 
-# reset matplotlib to defalt settings
+# reset matplotlib to default settings
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 
@@ -49,7 +49,7 @@ if sfc_x == sfc_y: # make sure the patterns are equal
     int_df = pd.DataFrame(
             {'sfc': sfc_x,
              'lp_x': int_het_scale_x,
-             'lp_y': int_het_scale_y            
+             'lp_y': int_het_scale_y
              })
 int_df['lp_avg'] = int_df.mean(axis=1)
 int_df.set_index('sfc')
