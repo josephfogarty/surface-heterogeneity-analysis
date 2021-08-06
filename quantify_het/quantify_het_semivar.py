@@ -6,6 +6,7 @@ A code to quantify surface heterogeneity
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import pandas as pd
 
 # reset matplotlib to defalt settings
 import matplotlib as mpl
@@ -115,6 +116,7 @@ for filename in sorted(os.listdir(lp)):
         fig_x.tight_layout()
         fig_x.savefig(os.path.join(semivariogram_sp,fname + '_x.png'))
         
+        
         # create semivariogram in y
         fig_y, ax_y = plt.subplots(figsize=(10,6))
         ax_y.plot(ry,semivary/np.max(semivary),label=f"{fname}")
@@ -125,6 +127,14 @@ for filename in sorted(os.listdir(lp)):
         ax_y.set_title(struc_title+r", in $y$",fontsize=16)
         fig_y.tight_layout()
         fig_y.savefig(os.path.join(semivariogram_sp,fname+'_y.png'))
+        
+        # create pandas dataframe of data first create dict
+        dict_to_df = {'rx': rx, 'semivar_x': semivarx,
+                      'semivar_x_norm': semivarx/np.max(semivarx),
+                      'ry': ry, 'semivar_y': semivary,
+                      'semivar_y_norm': semivary/np.max(semivary)}
+        df = pd.DataFrame(dict_to_df)
+        df.to_csv(os.path.join(semivariogram_sp,fname + '_semivar_data.csv'))
 
         
 ### now save text files of int length scales ###
