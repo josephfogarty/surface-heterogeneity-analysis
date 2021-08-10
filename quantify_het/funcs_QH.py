@@ -5,6 +5,8 @@ import numpy as np
 from scipy import stats
 from scipy.integrate import simps
 from scipy.signal import argrelextrema
+from libpysal.weights import lat2W
+from esda.moran import Moran
 
 ##### the functions #####
 
@@ -12,14 +14,14 @@ def semivariogram(arr,peak=False):
 
     """
     This is a brute-force semivariogram code which computes the structure
-    function across rows
+    function across rows, then averages to create the semivariogram
 
     This function also calculates the integral length scale using the method
     outlined in Bou-Zeid et. al (2007), JAS
 
     arr is the 2D array to be analyzed
 
-    Built off of NumPy
+    Built off of NumPy, SciPy
     """
 
     # range of rx
@@ -91,7 +93,6 @@ def semivariogram(arr,peak=False):
 
             return rx_vals, semivar, l_p
 
-
         integrand = 1.0 - (semivar[:len(semivar)//2]/np.max(semivar))
 
         # calculate change in rx
@@ -101,9 +102,6 @@ def semivariogram(arr,peak=False):
 
         # estimate integral using simpsons rule to get integral length scale
         l_p = simps(integrand, dx=drx)
-        # l_p = np.sum(integrand)
-        # print(l_p)
-
 
         # now cut the array halfway and calculate integrand
         integrand = 1.0 - (semivar[:len(semivar)//2]/np.max(semivar))
@@ -125,10 +123,26 @@ def semivariogram(arr,peak=False):
 
     return rx_vals, semivar, l_p
 
+
+
 def calculate_transition_statistics(array):
 
+    """
+    This function calculates the average length of patches
+    by analyzing the length of similar pixels in a row
+    in the x direction
+
+    transpose the matrix for the same calculation
+    in the y direction
+
+    inputs:
+    the array to calculate thransition statistics
+
+    outputs:
+    a dictionary with...
+    """
+
     print(f"\n  Calculating transition statistics for array of shape {np.shape(array)}")
-    #calculate transition scales and lists
     # first, look for interval changes and pad with bool 1s on sides to set the
     # first interval for each row and for setting boundary wrt the next row
     p = np.ones((len(array),1), dtype=bool)
@@ -175,3 +189,76 @@ def calculate_transition_statistics(array):
                 all_length_information[value].append(arr_row[j,1])
 
     return all_length_information
+
+
+
+def prep_periodic(surface):
+
+    """
+    This function will simply add a border around the surface array that
+    represents the periodicity of the domain
+
+    This is done for quantification methods that require information on
+    the eight surrounding pixels, so that the borders may be accurately
+    calculated
+
+    surface is the 2D array to be padded
+    the new size of su
+
+    Built off of NumPy, specifically the np.pad(function)
+    """
+
+    # apply np.pad
+    print(f'\n  Adding border to surface of shape {np.shape(surface)}')
+    surface_padded = np.pad(surface,pad_width=1,mode='wrap')
+    print(f'  the new shape of surface is {np.shape(surface2)}')
+
+    return surface_padded
+
+
+
+def evenness(surface):
+
+    """
+    This function calculates the evenness of a surface
+
+    Do not apply the prep_periodic() function for this function
+
+    inputs:
+    surface - surface to calculate evenness
+
+    outputs:
+    E - the eveness of the surface
+    """
+
+    # get information on patch types and frequency
+    pixel_stats = np.array(np.unique(surface, return_counts=True)).T
+
+    # number of unique values
+    n = len(pixel_stats)
+
+    # sum of squared probabilities that each unique value is randomly chosen
+    prob_sum = 0
+    for unique in pixel_stats:
+        prob_sum += (unique[1]/np.size(surface))**2.0
+
+    # calculate E
+    E = -100.0*np.log(prob_sum)/np.log(n)
+    return E
+
+
+def moran(surface):
+
+    """
+    decription here
+    """
+
+    # Create the matrix of weweights
+    w = lat2W(surface.shape[0], surface.shape[1])
+
+    # Crate the pysal Moran object
+    mi = Moran(Z, w)
+
+    # Verify Moran's I results
+    print(f'\n  For surface {i}, MI = {mi.I:.2f}')
+    print(f'  p_norm = {mi.p_norm:.3e}')
