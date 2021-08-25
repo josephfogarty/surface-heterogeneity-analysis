@@ -14,7 +14,6 @@ import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 
 
-
 # define constants - these are changed in class cnst in constants.py
 root = cnst.root
 ice = float(cnst.ice_temp)

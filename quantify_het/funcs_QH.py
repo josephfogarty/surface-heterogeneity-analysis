@@ -7,8 +7,25 @@ from scipy.integrate import simps
 from scipy.signal import argrelextrema
 from libpysal.weights import lat2W
 from esda.moran import Moran
+from esda.join_counts import Join_Counts
 
 ##### the functions #####
+
+def ice_fraction(surface):
+    """
+    This function gives the counts for ice and water for a sea-ice surface
+    
+    returns a dictionary of the counts and unique values
+    """
+    ice_stat = {}
+    
+    unique, counts = np.unique(surface, return_counts=True)
+    for uv, count in zip(unique, counts):
+        ice_stat[str(uv)+' count'] = count
+    ice_stat['total count'] = np.size(surface)
+    
+    return ice_stat
+    
 
 def semivariogram(arr,peak=False):
 
@@ -20,6 +37,7 @@ def semivariogram(arr,peak=False):
     outlined in Bou-Zeid et. al (2007), JAS
 
     arr is the 2D array to be analyzed
+    peak is used for ideal patterns
 
     Built off of NumPy, SciPy
     """
@@ -35,7 +53,7 @@ def semivariogram(arr,peak=False):
 
         # print rx (optional)
         rxl = len(rx_vals)
-        print(f'  Progress: {rx}/{rxl}, {rx/rxl*100:.2f}%')
+        #print(f'  Progress: {rx}/{rxl}, {rx/rxl*100:.2f}%')
 
         # get rolled array
         rolled = np.roll(arr,rx,axis=1)
@@ -46,7 +64,7 @@ def semivariogram(arr,peak=False):
     # now we have a list of rx values and structure function values
     # rx_val and semivar - convert semivar to array
     semivar = np.array(semivar)
-    print("    Semivariogram obtained")
+    #print("    Semivariogram obtained")
 
     # check for all zeros in semivar
     all_zeros = not np.any(semivar)
@@ -142,7 +160,7 @@ def calculate_transition_statistics(array):
     a dictionary with...
     """
 
-    print(f"\n  Calculating transition statistics for array of shape {np.shape(array)}")
+    #print(f"\n  Calculating transition statistics for array of shape {np.shape(array)}")
     # first, look for interval changes and pad with bool 1s on sides to set the
     # first interval for each row and for setting boundary wrt the next row
     p = np.ones((len(array),1), dtype=bool)
@@ -167,7 +185,7 @@ def calculate_transition_statistics(array):
     all_length_information = {}
     for uv in np.unique(array):
         all_length_information[uv] = []
-    print(f"    Unique values for this array are: {np.unique(array)}")
+    #print(f"    Unique values for this array are: {np.unique(array)}")
 
     # obtain number of transitions and each transition length per row
     for i in range(len(out)):
@@ -209,9 +227,9 @@ def prep_periodic(surface):
     """
 
     # apply np.pad
-    print(f'\n  Adding border to surface of shape {np.shape(surface)}')
+    #print(f'\n  Adding border to surface of shape {np.shape(surface)}')
     surface_padded = np.pad(surface,pad_width=1,mode='wrap')
-    print(f'  the new shape of surface is {np.shape(surface2)}')
+    #print(f'  the new shape of surface is {np.shape(surface_padded)}')
 
     return surface_padded
 
@@ -251,14 +269,72 @@ def moran(surface):
 
     """
     decription here
+
+    Returns Morans I Index for a surface
     """
 
-    # Create the matrix of weweights
-    w = lat2W(surface.shape[0], surface.shape[1])
+    # Create the matrix of weights for rook
+    w_r = lat2W(nrows=surface.shape[0],
+                ncols=surface.shape[1],
+                rook=True)
+    
+    # Create the matrix of weights for rook
+    w_q = lat2W(nrows=surface.shape[0],
+                ncols=surface.shape[1],
+                rook=False)
 
-    # Crate the pysal Moran object
-    mi = Moran(Z, w)
+    # Crate the esda Moran object
+    mi_r = Moran(surface, w_r)
+    mi_q = Moran(surface, w_q)
 
     # Verify Moran's I results
-    print(f'\n  For surface {i}, MI = {mi.I:.2f}')
-    print(f'  p_norm = {mi.p_norm:.3e}')
+    #print(f'\n  For surface, MI = {mi.I:.2f}')
+    #print(f'  p_norm = {mi.p_norm:.3e}')
+    return (mi_r.I, mi_r.p_norm), (mi_q.I, mi_q.p_norm) 
+
+
+def joincounts(surface):
+    
+    """
+    Returns join-count statistics (both queen and pawn configuration) 
+    for a surface
+    """
+    
+    # Create the matrix of weights for rook
+    w_r = lat2W(nrows=surface.shape[0],
+                ncols=surface.shape[1],
+                rook=True)
+    
+    # Create the matrix of weights for rook
+    w_q = lat2W(nrows=surface.shape[0],
+                ncols=surface.shape[1],
+                rook=False)
+
+    # Crate the esda JC object
+    jc_r = Join_Counts(surface, w_r)
+    jc_q = Join_Counts(surface, w_q)
+
+    # Verify Moran's I results
+    #print(f'\n  For surface, MI = {mi.I:.2f}')
+    #print(f'  p_norm = {mi.p_norm:.3e}')
+    return (jc_r.bb, jc_r.ww, jc_r.bw), (jc_q.bb, jc_q.ww, jc_q.bw)    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

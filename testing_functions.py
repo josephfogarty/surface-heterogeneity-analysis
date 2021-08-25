@@ -34,6 +34,10 @@ arr4 = np.array([[1,1,1,1,1,1],
 
 surfaces = [arr1, arr2, arr3, arr4]
 
+
+
+#%% contagion index
+
 #%% moran's I
 
 from libpysal.weights import lat2W
@@ -53,9 +57,6 @@ for i in range(len(surfaces)):
     # Verify Moran's I results
     print(f'\n  For surface {i}, MI = {mi.I:.2f}')
     print(f'  p_norm = {mi.p_norm:.3e}')
-
-
-#%%
 
 
 
@@ -98,5 +99,5 @@ def evenness(surface):
 
 
 for i in range(len(surfaces)):
-    print(f'\n E = '+str(evenness(surfaces[i])))
+    print(f'\n For array {i}, E = '+str(evenness(surfaces[i])))
 
